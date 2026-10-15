@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TOKENS } from "./board-data";
-import { TOKEN_COLORS } from "./Board";
+import { TOKEN_COLORS } from "./board-data";
 
 const DEFAULT_NAMES = ["Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4", "Joueur 5", "Joueur 6", "Joueur 7", "Joueur 8"];
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import Board, { TOKEN_COLORS } from "./Board";
+import { TOKEN_COLORS } from "./board-data";
 import ActionBar from "./ActionBar";
 import TradeModal from "./TradeModal";
 import PropertyPanel from "./PropertyPanel";
@@ -10,6 +11,13 @@ import { DiceDisplay, History, PlayerList, PropertiesSummary } from "./SidePanel
 import { applyCommand, createGame, type Command, type GameState } from "./engine";
 import { netWorth } from "./finance";
 import { SPACES, TOKENS } from "./board-data";
+
+const Board3D = dynamic(() => import("./Board3D"), {
+  ssr: false,
+  loading: () => (
+    <div className="aspect-square w-full max-w-[min(96vw,78vh)] animate-pulse rounded-2xl border border-slate-700 bg-slate-900/70" aria-busy="true" />
+  ),
+});
 
 type Tab = "joueurs" | "propriétés" | "journal";
 
@@ -167,7 +175,7 @@ export default function MonopolyScreen() {
   return (
     <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 lg:flex-row">
       <section className="flex flex-col items-center gap-3 lg:flex-1">
-        <Board s={game} onCellClick={setDetail} />
+        <Board3D s={game} onCellClick={setDetail} />
         <div className="w-full max-w-[min(96vw,70vh)] rounded-2xl border border-slate-700 bg-slate-900/70 p-3">
           <p className="mb-2 text-sm text-slate-200">{statusMsg}</p>
           <div className="flex flex-wrap items-center gap-4">

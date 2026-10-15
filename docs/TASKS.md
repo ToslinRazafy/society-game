@@ -5,7 +5,7 @@
 
 ## 🔄 En cours
 
-- [ ] **T-019** **Monopoly en 3D temps réel** (phase 1/2) — branche `feature/monopoly-3d`. Plateau 3D procédural (rues incarnées, noms/prix en drei Text), 8 pions low-poly reconnaissables animés case par case, dés 3D à roulement procédural atterrissant sur la valeur du moteur, maisons/hôtels en pièces 3D, stock banque visible. CSS grid 2D supprimé ; moteur inchangé (ADR-0007) ; pas de nouvelle dépendance. Modèle : ADR-0008.
+- Aucun
 
 ## 📋 À faire
 
@@ -34,3 +34,4 @@
 | 2026-10-15 | T-016 | **Refonte plateforme PlayBoard** : landing `/`, catalogue `/jeux` (filtres catégorie/disponibles), page jeu `/jeux/[slug]` (présentation + config joueurs avec noms), route partie `/jeux/[slug]/partie`, registre `src/games/registry.ts` (3 jeux, Fanorona/Monopoly en `soon`), dossier par jeu (`src/games/fanorina-7/`), header/footer/logo, responsive ; 34 tests (6 registre inclus), lint/build OK | feature/plateforme-navigation | ADR-0006, `docs/GAME-INTGRATION.md` |
 | 2026-10-15 | T-012 | **Remote git configuré** : dépôt GitHub `ToslinRazafy/society-game` poussé (main + develop) ; **release v0.1.0** (merge develop→main, tag `v0.1.0` pushé) | — | origin, tag v0.1.0 |
 | 2026-10-16 | T-018 | **Intégration Monopoly Premium** : moteur pur immuable (phases `roll → resolveBuy → auction → awaitPayment → manage → over`), config unique 40 cases édition française, enchères obligatoires, échanges, hypothèques/dettes/faillites, prison, decks Chance/Communauté, dés injectables (rng seedé), transactions atomiques ; UI hot-seat 2–8 joueurs (plateau CSS grid, setup, écran de partie, panneau propriété, enchères, échanges), règles `/regles/monopoly`, registre en `live`, illustration SVG ; 135 tests dont 101 moteur Monopoly (fuzz invariants 200 parties), lint/build OK | feature/monopoly | ADR-0007, spec §1–27, `src/games/monopoly/` |
+| 2026-10-16 | T-019 | **Monopoly en 3D temps réel (phase 1/2)** : plateau 3D procédural (`Board3D.tsx`, Canvas r3f + OrbitControls, `dynamic ssr:false`), rues incarnées — noms/prix/propriétaire via **textures canvas locales** (`textures.ts`, choix implanté à la place de drei Text pour garantir le 100 % hors ligne), 8 pions low-poly reconnaissables (`pieces3d.tsx`) animés **case par case** (`Token3D.tsx`, refs locales), dés 3D à toupie + rebond atterrissant sur la valeur du moteur (`Dice3D.tsx`, aucune physique), maisons/hôtels en pièces 3D, stock banque visible ; CSS grid 2D supprimé (`Board.tsx`) ; moteur inchangé ; pas de nouvelle dépendance ; 135 tests, lint/build OK | feature/monopoly-3d | ADR-0008, `src/games/monopoly/Board3D.tsx` |

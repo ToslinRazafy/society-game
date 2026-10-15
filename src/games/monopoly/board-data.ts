@@ -82,6 +82,42 @@ export const TOKENS = [
   { id: "pingouin", name: "Pingouin" },
 ] as const;
 
+// 8 couleurs de pions, distinctes des couleurs de groupes de rues.
+export const TOKEN_COLORS = [
+  "#E4002B",
+  "#00A651",
+  "#009CDE",
+  "#F6EB61",
+  "#FF8200",
+  "#6C3FA0",
+  "#0072BB",
+  "#EC008C",
+];
+
+export type BoardSide = "bottom" | "left" | "top" | "right";
+
+// Grille 11×11 (comme l'ancien CSS grid) : Départ index 0 en bas à droite, sens horaire.
+export function gridPos(index: number): { row: number; col: number; side: BoardSide } {
+  if (index <= 10) return { row: 11, col: 11 - index, side: "bottom" };
+  if (index <= 20) return { row: 11 - (index - 10), col: 1, side: "left" };
+  if (index <= 30) return { row: 1, col: index - 20 + 1, side: "top" };
+  return { row: index - 30 + 1, col: 11, side: "right" };
+}
+
+/** Position monde (x, z) du centre d'une case — grille centrée en (0,0), 1 unité = 1 case. */
+export function cellWorldPos(index: number): { x: number; z: number; side: BoardSide } {
+  const { row, col, side } = gridPos(index);
+  return { x: col - 6, z: row - 6, side };
+}
+
+/** Rotation Y (radians) pour que le texte d'une case se lise depuis l'extérieur du plateau. */
+export const SIDE_ROT_Y: Record<BoardSide, number> = {
+  bottom: 0,
+  left: -Math.PI / 2,
+  top: Math.PI,
+  right: Math.PI / 2,
+};
+
 export function spacesOfGroup(group: ColorGroup): Space[] {
   return SPACES.filter((s) => s.group === group);
 }

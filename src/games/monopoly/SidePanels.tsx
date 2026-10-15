@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { SPACES } from "./board-data";
-import { TOKEN_COLORS } from "./Board";
+import { TOKEN_COLORS } from "./board-data";
 import type { GameState } from "./state";
 
 function Chip({ i }: { i: number }) {
