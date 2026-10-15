@@ -1,4 +1,4 @@
-# PLAN — Feuille de route Society Game
+# PLAN — Feuille de route Society Game / Fanorina 7
 
 > Mis à jour à la fin de chaque cycle feature. Une phase ne passe à ✅ que quand elle est mergée dans `develop` et testée.
 
@@ -6,29 +6,29 @@
 
 - [x] Dépôt git, branches `main` / `develop`, workflow feature
 - [x] AGENTS.md + documentation vivante (ai-context, ADR, PLAN, TASKS)
-- [ ] Définir le jeu : règles, composants, déroulement d'une partie
-- [ ] Choisir backend / base de données / auth (ADR-0002+)
+- [x] Définir le jeu : règles Fanorina 7 (spec + ADR-0002)
+- [ ] Choisir backend / persistance / auth (T-002, T-003)
 
-## Phase 1 — Cœur du jeu
+## Phase 1 — Cœur du jeu ✅ (V1 locale)
 
-- [ ] Modèle de données (parties, joueurs, tours, état du plateau)
-- [ ] Moteur de règles côté serveur (logique pure, testable unitairement)
-- [ ] Page de création/join d'une partie
+- [x] Modèle de données du plateau (graphe 32 nœuds, ADR-0002)
+- [x] Moteur de règles pur et testable (26 tests Vitest)
+- [x] Écran de partie jouable (2/3/4 joueurs, local)
+- [x] Écran d'accueil + règles + paramètres
+- [ ] Playtest & équilibrage (T-010)
 
-## Phase 2 — Plateforme joueurs
+## Phase 2 — Adversaires et plateforme
 
-- [ ] Comptes et authentification
-- [ ] Lobby et listes de parties
-- [ ] Historique et résultats
+- [ ] IA 3 niveaux (T-008)
+- [ ] Persistance des parties / profils (T-002)
+- [ ] Comptes et authentification (T-003)
 
-## Phase 3 — Contenu & polish
+## Phase 3 — Multijoueur à distance
 
-- [ ] Gestion du contenu du jeu (cartes, tuiles, variantes — selon règles)
-- [ ] Responsive / UX mobile
+- [ ] Parties privées avec code d'invitation (T-009)
+- [ ] Matchmaking et synchronisation (spec §11.3 à compléter)
 - [ ] Déploiement (plateforme à décider via ADR)
 
 ## Candidats futurs (non planifiés)
 
-- Multi-joueur temps réel (WebSocket / SSE)
-- Mode solo / IA opposante
-- Internationalisation
+- Mode solo à objectifs, classements, internationalisation, replay des parties.
