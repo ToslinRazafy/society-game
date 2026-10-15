@@ -1,7 +1,7 @@
 # AI Context — PlayBoard (ex-Society Game)
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-16 (feature/monopoly)
+> Dernière mise à jour : 2026-10-16 (feature/monopoly-3d)
 
 ## Vision
 
@@ -34,6 +34,7 @@ Parcours : landing → catalogue → présentation/configuration → partie.
 | Architecture multi-jeux | Registre `src/games/registry.ts` + un dossier par jeu + routes `/jeux/[slug]` ; jeux `soon` au catalogue sans partie | ADR-0006 |
 | Navigation plateforme | Landing `/` → catalogue `/jeux` → page jeu (présentation + config) → `/jeux/[slug]/partie` | ADR-0006 |
 | Modèle Monopoly | Moteur pur immuable, machine à phases explicite (`roll → resolveBuy → auction → awaitPayment → manage → over`), dés injectables, transactions atomiques banque↔joueur, pas de sauvegarde en V1 (GameState sérialisable) | ADR-0007 |
+| Rendu 3D Monopoly | Assets 100 % procéduraux (primitives + textures canvas locales, aucune police/dépendance externe), dés animés déterministes (la valeur vient du moteur), extension d'ADR-0005 à Monopoly, CSS grid 2D supprimé | ADR-0008 |
 | Mode IA / en ligne | Architecturé (moteur pur), non implémenté | — |
 
 ## Architecture actuelle
@@ -51,7 +52,7 @@ src/
       FanorinaSetup.tsx             # configuration : nb joueurs, noms, 1er joueur, animations
     monopoly/     # Monopoly Premium — moteur pur + UI (ADR-0007)
       types.ts / state.ts           # GameState, PlayerState, PropertyState, Command, Phase, AuctionState, DebtState, TradeOffer
-      board-data.ts(+test)          # config unique 40 cases (SPACES, GROUP_COLORS, TOKENS), constants FR (1500, GO 200…)
+      board-data.ts(+test)          # config unique 40 cases (SPACES, GROUP_COLORS, TOKENS, TOKEN_COLORS), constants FR (1500, GO 200…), gridPos/cellWorldPos/SIDE_ROT_Y
       rng.ts                        # mulberry32 seedé + rollDice(rng) — dés injectables
       cards.ts(+test)               # decks Chance / Communauté (ordre fixe, mélangé au départ)
       finance.ts                    # payTo / receive atomiques, faillite, dette banque vs joueur
@@ -59,9 +60,13 @@ src/
       properties.ts                 # achat, enchères obligatoires, construction/vente équilibrées, hypothèques, échanges
       engine.ts(+test)              # applyCommand : dispatcher immuable par phase, illegal → même référence
       jail.test.ts / economy.test.ts / trade-bankrupt.test.ts / invariants.test.ts / test-helpers.ts
-      Board.tsx                     # plateau CSS grid 11×11 (40 cases, pions, maisons/hôtels, hypothèque)
+      textures.ts                   # textures canvas 100 % locales (cases, centre, stocks) — convention : haut de texture = centre du plateau
+      pieces3d.tsx                  # House3D/Hotel3D/BuildingRow + 8 pions procéduraux reconnaissables (chien, chat, sac, chapeau, dé à coudre, canard, voiture, pingouin)
+      Token3D.tsx                   # pion animé : file d'attente de cases parcourue une par une (refs locales, jamais GameState)
+      Dice3D.tsx                    # dés 3D : toupie + rebond ~1 s puis atterrissage orienté sur la valeur du moteur (aucune physique)
+      Board3D.tsx                   # scène 3D (Canvas/r3f/drei) : plateau, rues incarnées, pièces, stock banque, cliquable case par case (ADR-0008 ; remplace l'ancien Board.tsx CSS grid, supprimé)
       MonopolySetup.tsx             # config : 2–8 joueurs, noms, pions uniques → ?joueurs=&noms=&pions=
-      MonopolyScreen.tsx            # écran de partie : phase machine, enchères, dettes, échanges, fin de partie
+      MonopolyScreen.tsx            # écran de partie : Board3D chargé en `dynamic(ssr:false)` + squelette, panneaux DOM (enchère, dette, échange, journal)
       ActionBar.tsx / SidePanels.tsx / TradeModal.tsx / PropertyPanel.tsx
   components/     # PARTAGÉ SITE (pas de logique de jeu)
     SiteHeader.tsx  # logo PlayBoard + nav + CTA (mobile : menu déroulant)
@@ -90,15 +95,20 @@ des fonds) → `manage` (constructions, hypothèques, échanges, fin de tour) �
 gagné). Les sous-états d'attente décrits dans ADR-0007 (`moving`, `awaitBuy`, `awaitCard`…) ont été
 consolidés dans ces six phases à l'implémentation. La partie se joue en hot-seat : tous les
 commandements passent par `applyCommand(prev, command)` ; les animations/actions UI ne mutent
-jamais l'état.
+jamais l'état. `Board3D` est une projection pure de `GameState` : les états d'animation (file de
+cases des pions, toupie des dés) vivent dans des refs locales de composants (ADR-0008).
 
 ## Limites connues / prochaines étapes
 
 - Pas de persistance de partie (refresh = nouvelle partie), pas d'IA, pas de multi-appareils ;
   le `GameState` Monopoly est sérialisable, prêt pour T-002 (backend/replay à cadrer).
-- Le plateau 3D Fanorina exige WebGL (navigateur) : pas de rendu serveur ni de fallback 2D (ADR-0005).
-- Monopoly : pas d'animations de pions (déplacement instantané), pas de sons, échanges limités au
-  hot-seat (l'autre joueur saisit sa réponse sur le même appareil).
+- Les plateaux 3D (Fanorina et Monopoly) exigent WebGL (navigateur) : client-only `ssr:false`,
+  pas de rendu serveur ni de fallback 2D (ADR-0005, ADR-0008).
+- Monopoly 3D phase 1/2 (T-019) : plateau, pions animés case par case, dés animés, maisons/hôtels,
+  stock banque. Reste la phase 2 (T-020) : billets 3D volants, scène d'enchère (pupitre + marteau),
+  prison/tribunal animé, cartes Chance/Communauté retournées en 3D. Échanges limités au hot-seat.
+- Le ressenti des animations 3D (dés, pions, construction) doit être validé en navigateur réel
+  (playtest T-010) : non vérifiable headless.
 - Pas de tests de composants UI (décision ADR à venir si besoin) ; le moteur Monopoly est couvert
   par ~100 tests + fuzz d'invariants (200 parties).
 - Validation du ressenti en jeu réel (équilibrage, lisibilité des indices visuels).

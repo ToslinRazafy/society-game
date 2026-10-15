@@ -20,3 +20,4 @@ Un ADR documente une décision d'architecture significative : contexte, options,
 | [0005](0005-rendu-3d-three-js.md) | Rendu 3D du plateau (three.js + react-three-fiber) | Accepté |
 | [0006](0006-architecture-multi-jeux.md) | Architecture multi-jeux : registre + routes /jeux (PlayBoard) | Accepté |
 | [0007](0007-modele-monopoly.md) | Modèle Monopoly : config unique, machine à phases, moteur pur sans persistance V1 | Accepté |
+| [0008](0008-rendu-3d-monopoly.md) | Rendu 3D Monopoly : assets procéduraux, dés animés déterministes, extension d'ADR-0005 | Accepté |
