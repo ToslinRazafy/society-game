@@ -18,3 +18,4 @@ Un ADR documente une décision d'architecture significative : contexte, options,
 | [0003](0003-suite-de-tests-vitest.md) | Vitest comme suite de tests | Accepté |
 | [0004](0004-chaine-de-sauts.md) | Chaîne de sauts — le coup supplémentaire peut capturer | Accepté |
 | [0005](0005-rendu-3d-three-js.md) | Rendu 3D du plateau (three.js + react-three-fiber) | Accepté |
+| [0006](0006-architecture-multi-jeux.md) | Architecture multi-jeux : registre + routes /jeux (PlayBoard) | Accepté |

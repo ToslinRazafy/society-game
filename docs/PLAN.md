@@ -1,4 +1,4 @@
-# PLAN — Feuille de route Society Game / Fanorina 7
+# PLAN — Feuille de route PlayBoard (Society Game)
 
 > Mis à jour à la fin de chaque cycle feature. Une phase ne passe à ✅ que quand elle est mergée dans `develop` et testée.
 
@@ -15,11 +15,13 @@
 - [x] Moteur de règles pur et testable (26 tests Vitest)
 - [x] Écran de partie jouable (2/3/4 joueurs, local)
 - [x] Écran d'accueil + règles + paramètres
+- [x] Plateforme PlayBoard : landing → catalogue `/jeux` → page jeu (présentation + config) → partie ; architecture multi-jeux (registre + dossier par jeu, ADR-0006)
 - [ ] Playtest & équilibrage (T-010)
 
 ## Phase 2 — Adversaires et plateforme
 
 - [ ] IA 3 niveaux (T-008)
+- [ ] Intégration Fanorona (T-017) puis Monopoly Premium (T-018) — specs dans `docs/GAME-INTGRATION.md`
 - [ ] Persistance des parties / profils (T-002)
 - [ ] Comptes et authentification (T-003)
 
