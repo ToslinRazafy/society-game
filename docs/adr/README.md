@@ -14,3 +14,5 @@ Un ADR documente une décision d'architecture significative : contexte, options,
 | ID | Titre | Status |
 |---|---|---|
 | [0001](0001-stack-front-end-nextjs.md) | Stack front-end : Next.js + TypeScript + Tailwind | Accepté |
+| [0002](0002-modele-plateau-regles.md) | Modèle du plateau (graphe 32 nœuds) et règles centrales | Accepté |
+| [0003](0003-suite-de-tests-vitest.md) | Vitest comme suite de tests | Accepté |
