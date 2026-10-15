@@ -21,7 +21,9 @@
 ## Phase 2 — Adversaires et plateforme
 
 - [ ] IA 3 niveaux (T-008)
-- [ ] Intégration Fanorona (T-017) puis Monopoly Premium (T-018) — specs dans `docs/GAME-INTGRATION.md`
+- [ ] Intégration Fanorona (T-017) — spec dans `docs/GAME-INTGRATION.md`
+- [x] Intégration Monopoly Premium (T-018, mergée develop 2026-10-16) — spec dans `docs/GAME-INTGRATION.md`, ADR-0007
+- [x] Monopoly en 3D temps réel phase 1/2 (T-019, mergée develop 2026-10-16) — plateau/pions/dés/maisons procéduraux, ADR-0008 ; phase 2 (billets, enchères, prison, cartes) = T-020
 - [ ] Persistance des parties / profils (T-002)
 - [ ] Comptes et authentification (T-003)
 

@@ -6,6 +6,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import GameCard from "@/components/GameCard";
 import FanorinaSetup from "@/games/fanorina-7/FanorinaSetup";
+import MonopolySetup from "@/games/monopoly/MonopolySetup";
 import { GAMES, getGame } from "@/games/registry";
 
 export function generateStaticParams() {
@@ -100,6 +101,8 @@ export default async function JeuPage({ params }: { params: Promise<{ slug: stri
                 </p>
                 {game.slug === "fanorina-7" ? (
                   <FanorinaSetup />
+                ) : game.slug === "monopoly" ? (
+                  <MonopolySetup />
                 ) : (
                   <p className="text-slate-300">Configuration indisponible pour ce jeu.</p>
                 )}
