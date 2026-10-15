@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import BoardSVG from "./BoardSVG";
 import { NodeId } from "@/game/board";
 import {
   Axis,
@@ -17,7 +17,13 @@ import {
   createGame,
   legalMoves,
 } from "@/game/engine";
-import { applyAnimations, animationsEnabled } from "@/lib/settings";
+
+const Board3D = dynamic(() => import("./Board3D"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[62vh] lg:h-[78vh] rounded-2xl border border-slate-700 bg-slate-900 animate-pulse" />
+  ),
+});
 
 function parseConfig(params: URLSearchParams): GameConfig {
   const count = ([2, 3, 4] as number[]).includes(Number(params.get("joueurs")))
@@ -41,10 +47,6 @@ export default function GameScreen() {
   const [toast, setToast] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"restart" | "quit" | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    applyAnimations(animationsEnabled());
-  }, []);
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -122,7 +124,7 @@ export default function GameScreen() {
               ? `${PLAYER_LABELS[game.current]} : la pierre qui a sauté rejoue — elle peut enchaîner les captures.`
               : `Au tour de ${PLAYER_LABELS[game.current]} de jouer.`}
         </p>
-        <BoardSVG
+        <Board3D
           stones={game.stones}
           colors={PLAYER_COLORS}
           selected={selected}
