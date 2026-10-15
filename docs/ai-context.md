@@ -1,7 +1,7 @@
 # AI Context — Society Game / Fanorina 7
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-15 (feature/fanorina-7)
+> Dernière mise à jour : 2026-10-15 (feature/plateau-3d)
 
 ## Vision
 
@@ -27,6 +27,7 @@ gagné. Référence visuelle du plateau : `public/assets/fanorina-7-plateau-refe
 | Tests | Vitest, co-localisation `*.test.ts` | ADR-0003 |
 | Backend / persistance | Non décidé (partie 100 % client pour l'instant) | — |
 | Auth / comptes joueurs | Non décidé | — |
+| Rendu plateau | 3D temps réel : three.js + @react-three/fiber (+ drei), client-only (`ssr:false`) | ADR-0005 |
 | Mode IA / en ligne | Architecturé (moteur pur), non implémenté | — |
 
 ## Architecture actuelle
@@ -40,9 +41,9 @@ src/
   components/
     Home.tsx      # accueil : nb joueurs, axe 2P, 1er joueur, réglages
     GameScreen.tsx# écran de partie : orchestration, HUD, toasts, overlays
-    BoardSVG.tsx  # rendu SVG du graphe (lignes = arêtes du moteur)
+    Board3D.tsx   # rendu 3D (three.js/r3f) : plaques, arêtes cylinders, pierres animées
   lib/
-    settings.ts   # préférences localStorage → classes DOM (pas de setState en effect)
+    settings.ts   # préférences localStorage (animations lues au rendu du Board3D)
   app/
     page.tsx      # /            (accueil)
     partie/page   # /partie?joueurs=&axe=&premier=  (Suspense + GameScreen)
@@ -52,10 +53,11 @@ public/assets/    # dessin de référence du plateau
 
 États du tour (`Phase`) : `select` (choix d'une pierre) → `bonus` (la pierre ayant sauté rejoue —
 déplacement normal OU nouveau saut : chaîne de sauts, ADR-0004) → `over`. Les animations de pierres
-reposent sur l'identité stable `Stone.id` + transitions CSS.
+reposent sur l'identité stable `Stone.id` + interpolation de position dans `useFrame` (ADR-0005).
 
 ## Limites connues / prochaines étapes
 
 - Pas de persistance de partie (refresh = nouvelle partie), pas d'IA, pas de multi-appareils.
+- Le plateau 3D exige WebGL (navigateur) : pas de rendu serveur ni de fallback 2D (ADR-0005).
 - Pas de tests de composants UI (décision ADR à venir si besoin).
 - Validation du ressenti en jeu réel (équilibrage, lisibilité des indices visuels).
