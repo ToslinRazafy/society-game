@@ -1,7 +1,7 @@
 # AI Context — PlayBoard (ex-Society Game)
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-16 (feature/monopoly-3d)
+> Dernière mise à jour : 2026-10-16 (release **v0.2.0** taguée : Monopoly Premium + plateau 3D animé ; develop en cours)
 
 ## Vision
 
