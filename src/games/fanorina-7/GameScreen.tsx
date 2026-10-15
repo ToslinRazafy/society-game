@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
-import { NodeId } from "@/game/board";
+import { NodeId } from "@/games/fanorina-7/board";
 import {
   Axis,
   GameConfig,
@@ -16,7 +16,7 @@ import {
   countStones,
   createGame,
   legalMoves,
-} from "@/game/engine";
+} from "@/games/fanorina-7/engine";
 
 const Board3D = dynamic(() => import("./Board3D"), {
   ssr: false,
@@ -36,10 +36,19 @@ function parseConfig(params: URLSearchParams): GameConfig {
   return { playerCount: count, axis, firstPlayer };
 }
 
+function parseNames(params: URLSearchParams): string[] {
+  return params.get("noms")?.split("|") ?? [];
+}
+
 export default function GameScreen() {
   const params = useSearchParams();
   const router = useRouter();
   const config = useMemo(() => parseConfig(new URLSearchParams(params.toString())), [params]);
+  const names = useMemo(() => parseNames(params), [params]);
+  const label = useCallback(
+    (playerIndex: number) => names[playerIndex]?.trim() || PLAYER_LABELS[playerIndex],
+    [names],
+  );
 
   const [game, setGame] = useState<GameState>(() => createGame(config));
   const [selected, setSelected] = useState<NodeId | null>(null);
@@ -121,8 +130,8 @@ export default function GameScreen() {
           {game.phase === "over"
             ? "Partie terminée."
             : game.phase === "bonus"
-              ? `${PLAYER_LABELS[game.current]} : la pierre qui a sauté rejoue — elle peut enchaîner les captures.`
-              : `Au tour de ${PLAYER_LABELS[game.current]} de jouer.`}
+              ? `${label(game.current)} : la pierre qui a sauté rejoue — elle peut enchaîner les captures.`
+              : `Au tour de ${label(game.current)} de jouer.`}
         </p>
         <Board3D
           stones={game.stones}
@@ -166,7 +175,7 @@ export default function GameScreen() {
                   style={{ background: PLAYER_COLORS[p.index] }}
                 />
                 <span className="font-medium">
-                  {PLAYER_LABELS[p.index]}
+                  {label(p.index)}
                   {isTurn && <span className="ml-1 text-xs text-slate-300">à toi</span>}
                 </span>
                 <span className="ml-auto tabular-nums" title="pierres restantes">
@@ -217,7 +226,7 @@ export default function GameScreen() {
                 </button>
               ) : (
                 <button
-                  onClick={() => router.push("/")}
+                  onClick={() => router.push("/jeux")}
                   className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 font-medium"
                 >
                   Quitter
@@ -238,7 +247,7 @@ export default function GameScreen() {
                 className="w-8 h-8 rounded-full inline-block"
                 style={{ background: PLAYER_COLORS[winner.index] }}
               />
-              <span className="font-bold">{PLAYER_LABELS[winner.index]}</span>
+              <span className="font-bold">{label(winner.index)}</span>
             </div>
             <p className="text-slate-300">
               {countStones(game, winner.index)} pierre
@@ -253,10 +262,10 @@ export default function GameScreen() {
                 Rejouer
               </button>
               <Link
-                href="/"
+                href="/jeux"
                 className="px-5 py-2.5 rounded-xl border border-slate-600 hover:bg-slate-800 font-semibold"
               >
-                Retour au menu
+                Retour aux jeux
               </Link>
             </div>
           </div>

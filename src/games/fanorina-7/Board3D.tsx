@@ -4,8 +4,8 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { EDGES, NODES, nodePoint, NodeId } from "@/game/board";
-import { Move, Stone } from "@/game/engine";
+import { EDGES, NODES, nodePoint, NodeId } from "@/games/fanorina-7/board";
+import { Move, Stone } from "@/games/fanorina-7/engine";
 import { animationsEnabled } from "@/lib/settings";
 
 const Y_TOP = 0.1; // surface du plateau
