@@ -17,6 +17,7 @@
 - [ ] **T-011** Sons / retours audio optionnels (à cadrer par une mini-spec)
 - [ ] **T-012** Configurer un remote git (GitHub) et les conventions de PR (ex-T-005)
 - [ ] **T-013** Tests de composants UI (Testing Library) — décider via ADR avant le mode en ligne
+- [ ] **T-015** Plateau 3D « vraie 3D » (three.js / react-three-fiber) — rendu, caméras, animations de saut ; ADR-0005 dépendance
 
 ## ✅ Terminé
 
@@ -27,3 +28,4 @@
 | 2026-10-15 | T-004 | Suite de tests Vitest + 26 tests moteur/graphe | feature/fanorina-7 | ADR-0003 |
 | 2026-10-15 | T-006 | Remplacer la page d'accueil placeholder | feature/fanorina-7 | `Home.tsx` |
 | 2026-10-15 | T-007 | **Fanorina 7 V1 multijoueur local** : plateau-graphe 32 nœuds, moteur (déplacement, saut-capture, bonus, tours, victoire), écran de jeu SVG interactif, HUD, animations, écrans victoire/confirmations, réglages | feature/fanorina-7 | ADR-0002/0003, `src/game`, `src/components` |
+| 2026-10-15 | T-014 | **Fix règle (playtest)** : chaîne de sauts — la pierre qui a sauté peut capturer à nouveau, la chaîne continue tant que des captures existent ; HUD/règles/tests mis à jour (28 tests) | fix/captures-en-chaine | ADR-0004, `/regles` |

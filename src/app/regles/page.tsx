@@ -37,12 +37,15 @@ export default function ReglesPage() {
           <li>Un seul saut par mouvement (jamais par-dessus deux pierres), jamais vers une arrivée occupée, jamais au-dessus d&apos;une de vos propres pierres.</li>
         </ul>
 
-        <h2 className="text-xl font-bold text-sky-300">Déplacement supplémentaire</h2>
+        <h2 className="text-xl font-bold text-sky-300">Chaîne de sauts</h2>
         <p>
-          Après une élimination réussie, la pierre qui a sauté effectue <strong>un déplacement
-          normal supplémentaire</strong> (une connexion, vers une case libre, sans capturer). Le tour
-          passe ensuite au joueur suivant ; s&apos;il n&apos;y a aucun coup supplémentaire, le tour
-          se termine tout seul.
+          Après une élimination réussie, la pierre qui a sauté <strong>rejoue immédiatement</strong>.
+          Elle peut effectuer un déplacement normal — le tour passe alors au joueur suivant — ou
+          <strong> sauter à nouveau une pierre adverse</strong>. Si elle capture encore, elle rejoue
+          encore : la chaîne de sauts continue tant que des captures sont possibles avec cette même
+          pierre. Chaque saut reste un seul saut (jamais par-dessus deux pierres d&apos;un coup), et la
+          partie s&apos;arrête dès qu&apos;un saut de la chaîne retire la dernière pierre d&apos;un
+          adversaire.
         </p>
 
         <h2 className="text-xl font-bold text-sky-300">Tours et victoire</h2>

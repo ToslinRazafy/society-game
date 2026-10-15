@@ -190,7 +190,7 @@ describe("déplacement supplémentaire après capture", () => {
     return (applyMove(s, capture) as { ok: true; state: GameState }).state;
   };
 
-  it("phase bonus : seul le sauteur peut bouger, en déplacement normal", () => {
+  it("phase bonus : seul le sauteur peut rejouer", () => {
     const s = afterCapture();
     expect(s.phase).toBe("bonus");
     // une autre pierre de 0 n'a aucun coup légal en phase bonus
@@ -206,19 +206,66 @@ describe("déplacement supplémentaire après capture", () => {
     expect(legalMoves(other, N(3, 2))).toHaveLength(0);
   });
 
-  it("le bonus ne peut pas capturer", () => {
-    // sauteur en (1,2), adverse en (0,2), arrivée hors plateau : aucun coup
+  it("en phase bonus, le sauteur peut capturer à nouveau (chaîne de sauts)", () => {
     const s = makeState({
       stones: [
-        [1, 2, 0],
-        [0, 2, 1],
-        [2, 2, 1],
+        [3, 2, 0], // sauteur en phase bonus
+        [2, 2, 1], // nouvelle victime
+        [5, 2, 1], // P1 survit : la partie continue
       ],
       current: 0,
       phase: "bonus",
-      bonusStone: N(1, 2),
+      bonusStone: N(3, 2),
     });
-    expect(legalMoves(s, N(1, 2)).every((m) => m.type === "normal")).toBe(true);
+    const capture = legalMoves(s, N(3, 2)).find((m) => m.type === "capture");
+    expect(capture).toBeDefined();
+    expect(capture!.to).toBe(N(1, 2));
+    const r = applyMove(s, capture!);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(countStones(r.state, 1)).toBe(1); // victime retirée
+    expect(r.state.phase).toBe("bonus"); // la chaîne continue
+    expect(r.state.bonusStone).toBe(N(1, 2));
+    expect(r.state.current).toBe(0); // le tour ne passe toujours pas
+  });
+
+  it("un déplacement normal en phase bonus met fin au tour", () => {
+    const s = makeState({
+      stones: [
+        [3, 2, 0],
+        [2, 2, 1],
+        [5, 2, 1],
+      ],
+      current: 0,
+      phase: "bonus",
+      bonusStone: N(3, 2),
+    });
+    // même si une capture est possible, le joueur peut choisir un coup normal
+    const normal = legalMoves(s, N(3, 2)).find((m) => m.type === "normal" && m.to === N(3, 1));
+    expect(normal).toBeDefined();
+    const r = applyMove(s, normal!);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.state.current).toBe(1);
+    expect(r.state.phase).toBe("select");
+  });
+
+  it("victoire immédiate si la dernière pierre adverse tombe pendant la chaîne", () => {
+    const s = makeState({
+      stones: [
+        [3, 2, 0], // sauteur en phase bonus
+        [2, 2, 1], // unique pierre adverse
+      ],
+      current: 0,
+      phase: "bonus",
+      bonusStone: N(3, 2),
+    });
+    const capture = legalMoves(s, N(3, 2)).find((m) => m.type === "capture")!;
+    const r = applyMove(s, capture);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.state.phase).toBe("over");
+    expect(r.state.winner).toBe(0);
   });
 
   it("après le bonus, le tour passe au joueur suivant", () => {
@@ -238,7 +285,6 @@ describe("déplacement supplémentaire après capture", () => {
     expect(s.phase).toBe("bonus");
     const bonusMoves = legalMoves(s, s.bonusStone!);
     expect(bonusMoves.map((m) => m.to)).toContain(N(2, 2));
-    expect(bonusMoves.every((m) => m.type === "normal")).toBe(true);
   });
 });
 
