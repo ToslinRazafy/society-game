@@ -73,7 +73,12 @@ export default function GameScreen() {
             setMoves([]);
             return;
           }
-          if (move.type === "capture") showToast("Pierre éliminée !");
+          if (move.type === "capture")
+            showToast(
+              result.state.phase === "bonus"
+                ? "Pierre éliminée ! Cette pierre peut sauter à nouveau."
+                : "Pierre éliminée !",
+            );
           setGame(result.state);
           setSelected(null);
           setMoves([]);
@@ -84,7 +89,7 @@ export default function GameScreen() {
       const stone = game.stones[id];
       if (stone && stone.player === game.current) {
         if (game.phase === "bonus" && id !== game.bonusStone) {
-          showToast("Déplacement supplémentaire : seule la pierre qui a sauté peut jouer.");
+          showToast("Seule la pierre qui a sauté peut rejouer — elle peut capturer à nouveau.");
           return;
         }
         const ms = legalMoves(game, id);
@@ -114,7 +119,7 @@ export default function GameScreen() {
           {game.phase === "over"
             ? "Partie terminée."
             : game.phase === "bonus"
-              ? `Déplacement supplémentaire pour ${PLAYER_LABELS[game.current]}.`
+              ? `${PLAYER_LABELS[game.current]} : la pierre qui a sauté rejoue — elle peut enchaîner les captures.`
               : `Au tour de ${PLAYER_LABELS[game.current]} de jouer.`}
         </p>
         <BoardSVG

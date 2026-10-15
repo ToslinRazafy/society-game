@@ -23,7 +23,7 @@ gagné. Référence visuelle du plateau : `public/assets/fanorina-7-plateau-refe
 |---|---|---|
 | Stack frontend | Next.js + TS + Tailwind | ADR-0001 |
 | Plateau | Graphe 32 nœuds, centre non jouable, départ 7/9 par bras | ADR-0002 |
-| Règles | Moteur pur immuable ; capture → bonus normal ; victoire immédiate | ADR-0002 |
+| Règles | Moteur pur immuable ; capture → chaîne de sauts (le coup supplémentaire peut recapturer) ; victoire immédiate | ADR-0002 + ADR-0004 |
 | Tests | Vitest, co-localisation `*.test.ts` | ADR-0003 |
 | Backend / persistance | Non décidé (partie 100 % client pour l'instant) | — |
 | Auth / comptes joueurs | Non décidé | — |
@@ -36,7 +36,7 @@ src/
   game/           # MOTEUR PUR (aucun import React/DOM)
     board.ts      # graphe : nœuds, arêtes, zones de départ (source de vérité)
     engine.ts     # état GameState, legalMoves, applyMove, tours, victoire
-    *.test.ts     # 26 tests (invariants du graphe + toutes les règles)
+    *.test.ts     # 28 tests (invariants du graphe + toutes les règles)
   components/
     Home.tsx      # accueil : nb joueurs, axe 2P, 1er joueur, réglages
     GameScreen.tsx# écran de partie : orchestration, HUD, toasts, overlays
@@ -50,9 +50,9 @@ src/
 public/assets/    # dessin de référence du plateau
 ```
 
-États du tour (`Phase`) : `select` (choix d'une pierre) → `bonus` (déplacement supplémentaire
-après capture) → `over`. Les animations de pierres reposent sur l'identité stable `Stone.id` +
-transitions CSS.
+États du tour (`Phase`) : `select` (choix d'une pierre) → `bonus` (la pierre ayant sauté rejoue —
+déplacement normal OU nouveau saut : chaîne de sauts, ADR-0004) → `over`. Les animations de pierres
+reposent sur l'identité stable `Stone.id` + transitions CSS.
 
 ## Limites connues / prochaines étapes
 

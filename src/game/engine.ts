@@ -118,17 +118,14 @@ function captureLanding(from: NodeId, over: NodeId): NodeId | null {
 }
 
 // Coups légaux depuis une position, en respectant la phase du tour.
+// En phase bonus, seul le sauteur joue — et il peut capturer à nouveau
+// pour enchaîner les sauts (ADR-0004).
 export function legalMoves(state: GameState, from: NodeId): Move[] {
   if (state.phase === "over") return [];
   const stone = state.stones[from];
   if (!stone) return [];
-  if (state.phase === "bonus") {
-    if (from !== state.bonusStone || stone.player !== state.current) return [];
-    return neighbors(from)
-      .filter((to) => !state.stones[to])
-      .map((to) => ({ from, to, type: "normal" as const }));
-  }
   if (stone.player !== state.current) return [];
+  if (state.phase === "bonus" && from !== state.bonusStone) return [];
   const moves: Move[] = [];
   for (const via of neighbors(from)) {
     const occupant = state.stones[via];
@@ -214,7 +211,7 @@ export function applyMove(state: GameState, move: Move): ApplyResult {
 
   const moved: GameState = { ...state, stones, lastCapture };
 
-  if (state.phase === "select" && exact.type === "capture") {
+  if (exact.type === "capture") {
     const alive = state.players.filter((p) => countStones(moved, p.index) > 0);
     if (alive.length <= 1) {
       // la partie est finie : plus de bonus après la dernière pierre adverse
@@ -222,7 +219,7 @@ export function applyMove(state: GameState, move: Move): ApplyResult {
       const next = withAdvancedTurn(moved);
       return { ok: true, state: { ...next, history: [...state.history, entry] } };
     }
-    // déplacement supplémentaire obligatoire mais non capturable
+    // le sauteur rejoue : si un nouveau saut est possible, la chaîne continue
     const bonus = legalMoves({ ...moved, phase: "bonus", bonusStone: move.to }, move.to);
     if (bonus.length === 0) {
       const entry: HistoryEntry = { player: state.current, move: exact, autoBonusSkipped: true };

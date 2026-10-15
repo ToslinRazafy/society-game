@@ -1,6 +1,6 @@
 # ADR-0002 : Modèle du plateau et règles centrales Fanorina 7
 
-- **Status** : Accepté
+- **Status** : Accepté — clause « phase bonus » remplacée par [ADR-0004](0004-chaine-de-sauts.md)
 - **Date** : 2026-10-15
 - **Contexte de la tâche** : feature/fanorina-7 (spécification « PROMPT COMPLET — FANORINA 7 »)
 
