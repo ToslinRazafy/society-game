@@ -5,9 +5,11 @@
 
 ## 🔄 En cours
 
-(aucune)
+- [ ] **T-019** **Monopoly en 3D temps réel** (phase 1/2) — branche `feature/monopoly-3d`. Plateau 3D procédural (rues incarnées, noms/prix en drei Text), 8 pions low-poly reconnaissables animés case par case, dés 3D à roulement procédural atterrissant sur la valeur du moteur, maisons/hôtels en pièces 3D, stock banque visible. CSS grid 2D supprimé ; moteur inchangé (ADR-0007) ; pas de nouvelle dépendance. Modèle : ADR-0008.
 
 ## 📋 À faire
+
+- [ ] **T-020** **Monopoly en 3D (phase 2/2)** — billets 3D volant banque↔joueur à chaque transaction, scène d'enchère (pupitre + marteau), prison/tribunal animé, cartes Chance/Communauté retournées en 3D. S'appuie sur T-019.
 
 - [ ] **T-002** ADR : stratégie backend / persistance des parties (reprendre, match à distance, replay ?)
 - [ ] **T-003** ADR : authentification des joueurs
