@@ -52,12 +52,13 @@ export const GAMES: readonly GameMeta[] = [
     tagline: "Achetez, construisez, négociez — et faites faillir vos adversaires.",
     description:
       "Le plateau 40 cases complet : propriétés, gares, enchères, maisons, hôtels, cartes Chance et Caisse de communauté. De 2 à 8 joueurs, en local sur le même appareil.",
-    illustration: null,
+    illustration: "/assets/monopoly-plateau.svg",
     players: { min: 2, max: 8 },
     duration: "60–120 min",
     category: "Gestion",
-    status: "soon",
+    status: "live",
     featured: true,
+    rulesPath: "/regles/monopoly",
   },
 ];
 

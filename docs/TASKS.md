@@ -5,7 +5,7 @@
 
 ## 🔄 En cours
 
-*(aucune)*
+(aucune)
 
 ## 📋 À faire
 
@@ -17,7 +17,6 @@
 - [ ] **T-011** Sons / retours audio optionnels (à cadrer par une mini-spec)
 - [ ] **T-013** Tests de composants UI (Testing Library) — décider via ADR avant le mode en ligne
 - [ ] **T-017** Intégration **Fanorona** (2 joueurs, plateau 9×5, approches/retraits, séquences) — spec dans `docs/GAME-INTGRATION.md` : dossier `src/games/fanorona/`, entrée registre en `live`, écran de partie
-- [ ] **T-018** Intégration **Monopoly Premium** (2–8 joueurs, 40 cases) — spec dans `docs/GAME-INTGRATION.md` ; dépend probablement de T-002 (persistance) pour les parties longues
 
 ## ✅ Terminé
 
@@ -32,3 +31,4 @@
 | 2026-10-15 | T-015 | **Plateau 3D temps réel** : three.js + @react-three/fiber (+ drei OrbitControls), plaques/arêtes/pierres animées, import dynamique `ssr:false`, suppression du rendu SVG et des classes CSS d'animation | feature/plateau-3d | ADR-0005, `Board3D.tsx` |
 | 2026-10-15 | T-016 | **Refonte plateforme PlayBoard** : landing `/`, catalogue `/jeux` (filtres catégorie/disponibles), page jeu `/jeux/[slug]` (présentation + config joueurs avec noms), route partie `/jeux/[slug]/partie`, registre `src/games/registry.ts` (3 jeux, Fanorona/Monopoly en `soon`), dossier par jeu (`src/games/fanorina-7/`), header/footer/logo, responsive ; 34 tests (6 registre inclus), lint/build OK | feature/plateforme-navigation | ADR-0006, `docs/GAME-INTGRATION.md` |
 | 2026-10-15 | T-012 | **Remote git configuré** : dépôt GitHub `ToslinRazafy/society-game` poussé (main + develop) ; **release v0.1.0** (merge develop→main, tag `v0.1.0` pushé) | — | origin, tag v0.1.0 |
+| 2026-10-16 | T-018 | **Intégration Monopoly Premium** : moteur pur immuable (phases `roll → resolveBuy → auction → awaitPayment → manage → over`), config unique 40 cases édition française, enchères obligatoires, échanges, hypothèques/dettes/faillites, prison, decks Chance/Communauté, dés injectables (rng seedé), transactions atomiques ; UI hot-seat 2–8 joueurs (plateau CSS grid, setup, écran de partie, panneau propriété, enchères, échanges), règles `/regles/monopoly`, registre en `live`, illustration SVG ; 135 tests dont 101 moteur Monopoly (fuzz invariants 200 parties), lint/build OK | feature/monopoly | ADR-0007, spec §1–27, `src/games/monopoly/` |

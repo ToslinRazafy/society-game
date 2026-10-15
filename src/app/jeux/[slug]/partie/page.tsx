@@ -1,12 +1,14 @@
 import { Suspense, type ReactElement } from "react";
 import { notFound } from "next/navigation";
 import GameScreen from "@/games/fanorina-7/GameScreen";
+import MonopolyScreen from "@/games/monopoly/MonopolyScreen";
 import { getGame } from "@/games/registry";
 
 // Chaque jeu live fournit son propre écran de partie ; on le relie ici au
-// registre (un seul jeu jouable à ce jour).
+// registre.
 const PLAY_SCREENS: Record<string, () => ReactElement> = {
   "fanorina-7": () => <GameScreen />,
+  monopoly: () => <MonopolyScreen />,
 };
 
 async function Partie({ params }: { params: Promise<{ slug: string }> }) {
