@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fanorina 7 — jeu de stratégie",
+  title: "PlayBoard — Plateforme de jeux de société",
   description:
-    "Plateforme de jeu Fanorina 7 : déplacez vos 7 pierres, éliminez les adversaires par saut et soyez le dernier en jeu.",
+    "PlayBoard réunit des jeux de société multijoueurs en local : choisissez un jeu, configurez la table et jouez à tour de rôle sur le même appareil.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

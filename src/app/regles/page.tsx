@@ -4,9 +4,12 @@ export default function ReglesPage() {
   return (
     <main className="flex-1 max-w-2xl mx-auto w-full p-6 space-y-6">
       <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold">Règles du jeu</h1>
-        <Link href="/" className="px-4 py-2 rounded-xl border border-slate-600 hover:bg-slate-800">
-          ← Menu
+        <h1 className="text-3xl font-extrabold">Règles — Fanorina 7</h1>
+        <Link
+          href="/jeux/fanorina-7"
+          className="px-4 py-2 rounded-xl border border-slate-600 hover:bg-slate-800"
+        >
+          ← Configurer une partie
         </Link>
       </header>
 

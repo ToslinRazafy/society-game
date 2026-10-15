@@ -1,13 +1,15 @@
-# AI Context — Society Game / Fanorina 7
+# AI Context — PlayBoard (ex-Society Game)
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-15 (feature/plateau-3d)
+> Dernière mise à jour : 2026-10-15 (feature/plateforme-navigation)
 
 ## Vision
 
-Plateforme web hébergeant **Fanorina 7**, jeu de stratégie numérique inspiré des jeux de plateau à
-déplacements de pierres et éliminations par saut. 2 à 4 joueurs, 7 pierres chacun, dernier en jeu
-gagné. Référence visuelle du plateau : `public/assets/fanorina-7-plateau-reference.png`.
+Plateforme web **PlayBoard** hébergeant plusieurs jeux de société en multijoueur local (même
+appareil). Premier jeu disponible : **Fanorina 7** (2 à 4 joueurs, 7 pierres chacun, dernier en jeu
+gagné ; référence visuelle : `public/assets/fanorina-7-plateau-reference.png`). Backlog : Fanorona,
+Monopoly Premium (specs dans `docs/GAME-INTGRATION.md`). Parcours : landing → catalogue →
+présentation/configuration → partie.
 
 ## Stack technique (en vigueur)
 
@@ -28,27 +30,36 @@ gagné. Référence visuelle du plateau : `public/assets/fanorina-7-plateau-refe
 | Backend / persistance | Non décidé (partie 100 % client pour l'instant) | — |
 | Auth / comptes joueurs | Non décidé | — |
 | Rendu plateau | 3D temps réel : three.js + @react-three/fiber (+ drei), client-only (`ssr:false`) | ADR-0005 |
+| Architecture multi-jeux | Registre `src/games/registry.ts` + un dossier par jeu + routes `/jeux/[slug]` ; jeux `soon` au catalogue sans partie | ADR-0006 |
+| Navigation plateforme | Landing `/` → catalogue `/jeux` → page jeu (présentation + config) → `/jeux/[slug]/partie` | ADR-0006 |
 | Mode IA / en ligne | Architecturé (moteur pur), non implémenté | — |
 
 ## Architecture actuelle
 
 ```
 src/
-  game/           # MOTEUR PUR (aucun import React/DOM)
-    board.ts      # graphe : nœuds, arêtes, zones de départ (source de vérité)
-    engine.ts     # état GameState, legalMoves, applyMove, tours, victoire
-    *.test.ts     # 28 tests (invariants du graphe + toutes les règles)
-  components/
-    Home.tsx      # accueil : nb joueurs, axe 2P, 1er joueur, réglages
-    GameScreen.tsx# écran de partie : orchestration, HUD, toasts, overlays
-    Board3D.tsx   # rendu 3D (three.js/r3f) : plaques, arêtes cylinders, pierres animées
+  games/
+    registry.ts   # MÉTADONNÉES DE TOUS LES JEUX (source de vérité du catalogue) + getGame/categories
+    registry.test.ts
+    fanorina-7/   # UN JEU = UN DOSSIER (moteur + rendu + écran + setup)
+      board.ts / board.test.ts      # graphe 32 nœuds (moteur pur, inchangé)
+      engine.ts / engine.test.ts    # état, legalMoves, applyMove, chaîne de sauts (inchangé)
+      Board3D.tsx                   # rendu 3D three.js/r3f
+      GameScreen.tsx                # écran de partie (noms joueurs via ?noms=)
+      FanorinaSetup.tsx             # configuration : nb joueurs, noms, 1er joueur, animations
+  components/     # PARTAGÉ SITE (pas de logique de jeu)
+    SiteHeader.tsx  # logo PlayBoard + nav + CTA (mobile : menu déroulant)
+    SiteFooter.tsx
+    GameCard.tsx    # carte catalogue : illustration, badge live/soon, métadonnées
   lib/
-    settings.ts   # préférences localStorage (animations lues au rendu du Board3D)
+    settings.ts   # préférences localStorage (animations)
   app/
-    page.tsx      # /            (accueil)
-    partie/page   # /partie?joueurs=&axe=&premier=  (Suspense + GameScreen)
-    regles/page   # /regles      (règles statiques)
-public/assets/    # dessin de référence du plateau
+    page.tsx               # /                    landing (hero, concept, à la une, étapes, avantages)
+    jeux/page.tsx          # /jeux                catalogue (filtres catégorie + disponibles)
+    jeux/[slug]/page.tsx   # /jeux/fanorina-7     présentation + config (generateStaticParams)
+    jeux/[slug]/partie/    # /jeux/…/partie?...   écran de jeu (PLAY_SCREENS, Suspense)
+    regles/page.tsx        # /regles              règles Fanorina 7
+public/assets/    # logo.png (PlayBoard), dessin de référence du plateau
 ```
 
 États du tour (`Phase`) : `select` (choix d'une pierre) → `bonus` (la pierre ayant sauté rejoue —
