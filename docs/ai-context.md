@@ -1,7 +1,7 @@
 # AI Context — PlayBoard (ex-Society Game)
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-16 (release **v0.3.0** taguée : UI/UX + mode plein écran des parties ; develop en cours)
+> Dernière mise à jour : 2026-10-16 (release **v0.3.1** taguée : cadre de jeu plein écran maximal + responsive ; develop en cours)
 
 ## Vision
 
@@ -19,7 +19,7 @@ Parcours : landing → catalogue → présentation/configuration → partie.
 - **Style** : Tailwind CSS 4 ; thème sombre (#0f172a)
 - **Lint** : ESLint 9 ; **Tests** : Vitest 5 (`npm test`), cache hors dépôt (`vitest.config.mts`)
 - **Commandes** : `npm run dev` / `lint` / `test` / `build`
-- **Version** : 0.3.0 (release en vigueur : `v0.3.0`)
+- **Version** : 0.3.1 (release en vigueur : `v0.3.1`)
 
 ## Décisions en vigueur
 
