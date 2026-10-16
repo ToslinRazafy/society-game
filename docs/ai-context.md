@@ -17,7 +17,7 @@ Parcours : landing → catalogue → présentation/configuration → partie.
 - **Framework** : Next.js 16.4, App Router (`src/app/`)
 - **Langage** : TypeScript strict, React 19 (React Compiler)
 - **Style** : Tailwind CSS 4 ; thème sombre (#0f172a)
-- **Lint** : ESLint 9 ; **Tests** : Vitest 5 (`npm test`)
+- **Lint** : ESLint 9 ; **Tests** : Vitest 5 (`npm test`), cache hors dépôt (`vitest.config.mts`)
 - **Commandes** : `npm run dev` / `lint` / `test` / `build`
 - **Version** : 0.3.0 (release en vigueur : `v0.3.0`)
 
@@ -46,6 +46,7 @@ src/
   games/
     registry.ts   # MÉTADONNÉES DE TOUS LES JEUX (source de vérité du catalogue) + getGame/categories
     registry.test.ts
+    fit-camera.tsx # cadrage 3D partagé : le plateau remplit le conteneur sans rognage (T-024)
     fanorina-7/   # UN JEU = UN DOSSIER (moteur + rendu + écran + setup)
       board.ts / board.test.ts      # graphe 32 nœuds (moteur pur, inchangé)
       engine.ts / engine.test.ts    # état, legalMoves, applyMove, chaîne de sauts (inchangé)
@@ -120,4 +121,7 @@ cases des pions, toupie des dés) vivent dans des refs locales de composants (AD
 - Plein écran natif : dépend de l'API `requestFullscreen` du navigateur (masqué là où elle est
   absente, ex. Safari iOS sur iPhone) ; le mode immersif plein viewport reste actif dans tous les
   cas. Sortie par le bouton ou la touche Échap.
+- Cadrage 3D : la distance de caméra est recalculée analytiquement (`fit-camera.tsx`) pour remplir
+  le conteneur ; `THREE.Clock is deprecated` subsiste, émis par les internes de
+  `@react-three/fiber@9.8.2` (three 0.186) — voir T-025 (upgrade upstream).
 - Validation du ressenti en jeu réel (équilibrage, lisibilité des indices visuels).

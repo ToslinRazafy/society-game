@@ -4,6 +4,7 @@ import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import FitCamera from "@/games/fit-camera";
 import { EDGES, NODES, nodePoint, NodeId } from "@/games/fanorina-7/board";
 import { Move, Stone } from "@/games/fanorina-7/engine";
 import { animationsEnabled } from "@/lib/settings";
@@ -44,6 +45,10 @@ function Plates() {
 }
 
 const UP = new THREE.Vector3(0, 1, 0);
+
+// Point de vue par défaut du plateau (repli du cadrage tant que la caméra n'a
+// pas encore de position).
+const VIEW_DIRECTION: [number, number, number] = [0, 8.2, 7.4];
 
 function Edge({ a, b }: { a: NodeId; b: NodeId }) {
   const va = world(a);
@@ -208,8 +213,9 @@ export default function Board3D({
       role="application"
       aria-label="Plateau Fanorina 7 en 3D"
     >
-      <Canvas shadows camera={{ position: [0, 8.2, 7.4], fov: 45 }}>
+      <Canvas shadows="percentage" camera={{ position: [0, 8.2, 7.4], fov: 45 }}>
         <color attach="background" args={["#0b1220"]} />
+        <FitCamera halfSize={3.4} fallbackDirection={VIEW_DIRECTION} />
         <hemisphereLight args={["#dbeafe", "#1e293b", 1.0]} />
         <directionalLight
           position={[6, 12, 7]}
@@ -268,8 +274,8 @@ export default function Board3D({
           })}
         <OrbitControls
           enablePan={false}
-          minDistance={6}
-          maxDistance={15}
+          minDistance={4.5}
+          maxDistance={26}
           maxPolarAngle={Math.PI / 2.35}
         />
       </Canvas>
