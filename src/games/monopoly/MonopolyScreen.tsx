@@ -180,8 +180,8 @@ export default function MonopolyScreen() {
       status={statusMsg}
       onQuit={() => router.push("/jeux")}
     >
-      <section className="flex min-h-0 flex-1 flex-col items-center gap-2">
-        <div className="flex min-h-[52vh] w-full flex-1 items-center justify-center lg:min-h-0">
+      <section className="flex min-h-0 w-full flex-1 flex-col items-center gap-2">
+        <div className="flex min-h-[46dvh] w-full flex-1 items-center justify-center lg:min-h-0">
           <Board3D
             s={game}
             onCellClick={setDetail}
@@ -198,7 +198,7 @@ export default function MonopolyScreen() {
         </div>
       </section>
 
-      <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-80">
+      <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-72 lg:overflow-y-auto xl:w-80">
         {game.phase === "auction" && <AuctionPanel s={game} dispatch={dispatch} />}
         {canViewTradePrompt && <TradePrompt s={game} dispatch={dispatch} />}
         {game.phase === "awaitPayment" && <DebtBanner s={game} />}

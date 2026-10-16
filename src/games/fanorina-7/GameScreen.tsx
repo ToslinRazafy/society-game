@@ -143,8 +143,8 @@ export default function GameScreen() {
       onRestart={() => setConfirm("restart")}
       onQuit={() => setConfirm("quit")}
     >
-      {/* plateau */}
-      <section className="relative flex min-h-0 flex-1 items-center justify-center">
+      {/* plateau : le cadre occupe tout l'espace disponible */}
+      <section className="relative flex min-h-0 w-full flex-1 items-center justify-center">
         <Board3D
           stones={game.stones}
           colors={PLAYER_COLORS}
@@ -153,7 +153,7 @@ export default function GameScreen() {
           lastCapture={game.lastCapture}
           interactive={game.phase !== "over"}
           onNodeClick={handleNode}
-          className="h-[58vh] sm:h-[64vh] lg:h-full"
+          className="h-[52dvh] sm:h-[58dvh] lg:h-full"
         />
         {toast && (
           <div
@@ -166,7 +166,7 @@ export default function GameScreen() {
       </section>
 
       {/* HUD joueurs : bandeau défilant sur mobile, colonne sur grand écran */}
-      <aside className="flex w-full shrink-0 flex-col gap-2 lg:w-72">
+      <aside className="flex w-full shrink-0 flex-col gap-2 lg:w-72 lg:overflow-y-auto">
         <ul className="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:pb-0">
           {game.players.map((p) => {
             const stonesLeft = countStones(game, p.index);

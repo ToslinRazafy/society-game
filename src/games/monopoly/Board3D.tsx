@@ -6,6 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import FitCamera from "@/games/fit-camera";
 import { SPACES, TOKEN_COLORS, cellWorldPos, SIDE_ROT_Y } from "./board-data";
 import { cellBase, centerTexture, stockTexture } from "./textures";
 import { BuildingRow } from "./pieces3d";
@@ -15,6 +16,10 @@ import type { GameState } from "./state";
 import { animationsEnabled } from "@/lib/settings";
 
 const PLANE = new THREE.PlaneGeometry(1, 1);
+
+// Point de vue par défaut du plateau (repli du cadrage). Le plateau (socle
+// inclus) s'étend sur ±5.7 unités monde.
+const VIEW_DIRECTION: [number, number, number] = [0, 11.5, 11.5];
 
 function Cells({ s }: { s: GameState }) {
   return (
@@ -116,8 +121,9 @@ export default function Board3D({ s, onCellClick, className }: Props) {
       role="application"
       aria-label="Plateau Monopoly en 3D"
     >
-      <Canvas shadows camera={{ position: [0, 11.5, 11.5], fov: 42 }}>
+      <Canvas shadows="percentage" camera={{ position: [0, 11.5, 11.5], fov: 42 }}>
         <color attach="background" args={["#0b1220"]} />
+        <FitCamera halfSize={5.75} fallbackDirection={VIEW_DIRECTION} margin={1.03} />
         <hemisphereLight args={["#dbeafe", "#1e293b", 1.0]} />
         <directionalLight
           position={[7, 14, 8]}
@@ -156,7 +162,7 @@ export default function Board3D({ s, onCellClick, className }: Props) {
           )
         )}
         <Hitboxes onCellClick={onCellClick} />
-        <OrbitControls enablePan={false} minDistance={7} maxDistance={20} maxPolarAngle={Math.PI / 2.3} />
+        <OrbitControls enablePan={false} minDistance={8} maxDistance={30} maxPolarAngle={Math.PI / 2.3} />
       </Canvas>
     </div>
   );

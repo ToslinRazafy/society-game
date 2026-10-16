@@ -29,7 +29,7 @@ export default function GameShell({
 }: Props) {
   return (
     <div className="flex min-h-[100dvh] flex-col bg-slate-950 lg:h-[100dvh] lg:overflow-hidden">
-      <header className="flex shrink-0 items-center gap-2 border-b border-slate-800 bg-slate-950/90 px-2 py-2 backdrop-blur sm:gap-3 sm:px-4">
+      <header className="flex shrink-0 items-center gap-1.5 border-b border-slate-800 bg-slate-950/90 px-1.5 py-1.5 backdrop-blur sm:gap-3 sm:px-4 sm:py-2">
         <Link
           href="/jeux"
           aria-label="Retour au catalogue"
@@ -41,11 +41,11 @@ export default function GameShell({
           </svg>
         </Link>
 
-        <h1 className={`shrink-0 text-base font-black tracking-tight sm:text-lg ${accent}`}>
+        <h1 className={`shrink-0 truncate text-base font-black tracking-tight sm:text-lg ${accent}`}>
           {title}
         </h1>
 
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-2">
           {onRestart && (
             <button
               type="button"
@@ -83,14 +83,14 @@ export default function GameShell({
 
       {status && (
         <p
-          className="shrink-0 border-b border-slate-800/70 bg-slate-900/40 px-3 py-2 text-sm text-slate-200 sm:px-4"
+          className="shrink-0 border-b border-slate-800/70 bg-slate-900/40 px-3 py-1.5 text-xs text-slate-200 sm:px-4 sm:py-2 sm:text-sm"
           aria-live="polite"
         >
           {status}
         </p>
       )}
 
-      <div className="flex min-h-0 flex-1 flex-col gap-3 p-2 sm:p-3 lg:flex-row">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 p-1.5 sm:gap-3 sm:p-2 lg:flex-row">
         {children}
       </div>
     </div>
