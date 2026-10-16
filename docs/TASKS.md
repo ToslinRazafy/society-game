@@ -9,6 +9,8 @@
 
 ## 📋 À faire
 
+- [ ] **T-025** Mettre à jour `@react-three/fiber` dès qu'une version n'instancie plus `THREE.Clock` (warning de dépréciation émis par three 0.186 depuis les internes r3f 9.8.2 — dernière version dispo ; non corrigeable côté application sans patch).
+
 - [ ] **T-020** **Monopoly en 3D (phase 2/2)** — billets 3D volant banque↔joueur à chaque transaction, scène d'enchère (pupitre + marteau), prison/tribunal animé, cartes Chance/Communauté retournées en 3D. S'appuie sur T-019.
 
 - [ ] **T-002** ADR : stratégie backend / persistance des parties (reprendre, match à distance, replay ?)
@@ -38,3 +40,4 @@
 | 2026-10-16 | T-021 | **Release v0.2.0** : merge develop→main (`--no-ff`, commit `release:`), tag `v0.2.0` pushé ; contient Monopoly Premium complet (T-018) + plateau 3D animé Monopoly (T-019), version `package.json` 0.2.0 ; develop, main et tag poussés sur origin | — | tag v0.2.0 |
 | 2026-10-16 | T-022 | **UI/UX + mode plein écran** : écrans de partie en mode immersif plein viewport (`GameShell` : chrome du site masqué, plateau maximal, HUD adaptatif) ; **plein écran natif** (`FullscreenButton` + hook `useFullscreen` via `useSyncExternalStore`, lancement automatique au démarrage de partie, Échap) ; fondations d'accessibilité (focus visible, `prefers-reduced-motion`, sélection, barres de défilement) ; polish header (lien actif), cartes catalogue, filtres, règles (layout partagé header/footer) et boutons de configuration. Moteurs et fonctionnalités inchangés (135 tests), lint/build OK | feature/ui-ux-fullscreen | `src/components/GameShell.tsx`, `src/lib/use-fullscreen.ts` |
 | 2026-10-16 | T-023 | **Release v0.3.0** : merge develop→main (`--no-ff`, commit `release:`), tag `v0.3.0` pushé ; contient UI/UX + mode plein écran des parties (T-022) ; version `package.json` 0.3.0 ; develop, main et tag poussés sur origin | — | tag v0.3.0 |
+| 2026-10-16 | T-024 | **Cadre de jeu plein écran maximal + responsive + warnings three.js** : cadrage caméra analytique partagé (`src/games/fit-camera.tsx`) — le plateau remplit au maximum le conteneur sans rognage, quel que soit le format (portrait/paysage/plein écran) et la rotation ; marges/en-tête/HUD compactés (`dvh`), colonnes latérales défilables (plus de contenu coupé en `overflow-hidden`) ; warning `PCFSoftShadowMap has been removed` corrigé (`<Canvas shadows="percentage">`, rendu identique) ; cache Vitest déplacé hors du dépôt (`vitest.config.mts`) pour supprimer l'attente Turbopack ; moteurs inchangés (135 tests), lint/build OK | feature/board-fullscreen-responsive | `src/games/fit-camera.tsx`, `vitest.config.mts` |
