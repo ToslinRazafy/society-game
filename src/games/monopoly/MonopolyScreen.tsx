@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
+import GameShell from "@/components/GameShell";
 import { TOKEN_COLORS } from "./board-data";
 import ActionBar from "./ActionBar";
 import TradeModal from "./TradeModal";
@@ -15,7 +16,7 @@ import { SPACES, TOKENS } from "./board-data";
 const Board3D = dynamic(() => import("./Board3D"), {
   ssr: false,
   loading: () => (
-    <div className="aspect-square w-full max-w-[min(96vw,78vh)] animate-pulse rounded-2xl border border-slate-700 bg-slate-900/70" aria-busy="true" />
+    <div className="aspect-square w-full max-w-full animate-pulse rounded-2xl border border-slate-700 bg-slate-900/70 lg:h-full lg:w-auto" aria-busy="true" />
   ),
 });
 
@@ -173,26 +174,31 @@ export default function MonopolyScreen() {
   const canViewTradePrompt = game.tradeOffer !== null && game.current === game.tradeOffer.to;
 
   return (
-    <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-4 lg:flex-row">
-      <section className="flex flex-col items-center gap-3 lg:flex-1">
-        <Board3D s={game} onCellClick={setDetail} />
-        <div className="w-full max-w-[min(96vw,70vh)] rounded-2xl border border-slate-700 bg-slate-900/70 p-3">
-          <p className="mb-2 text-sm text-slate-200">{statusMsg}</p>
-          <div className="flex flex-wrap items-center gap-4">
+    <GameShell
+      title="Monopoly"
+      accent="text-amber-300"
+      status={statusMsg}
+      onQuit={() => router.push("/jeux")}
+    >
+      <section className="flex min-h-0 flex-1 flex-col items-center gap-2">
+        <div className="flex min-h-[52vh] w-full flex-1 items-center justify-center lg:min-h-0">
+          <Board3D
+            s={game}
+            onCellClick={setDetail}
+            className="aspect-square w-full max-w-full lg:h-full lg:w-auto"
+          />
+        </div>
+        <div className="w-full shrink-0 rounded-2xl border border-slate-700 bg-slate-900/70 p-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <DiceDisplay s={game} />
-            <span className="ml-auto text-xs uppercase tracking-widest text-slate-500">Banque : {game.bankHouses} maisons · {game.bankHotels} hôtels · tour {game.turn}</span>
+            <span className="ml-auto text-xs uppercase tracking-widest text-slate-500">
+              Banque : {game.bankHouses} maisons · {game.bankHotels} hôtels · tour {game.turn}
+            </span>
           </div>
         </div>
       </section>
 
-      <aside className="flex w-full flex-col gap-3 lg:w-80">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-black tracking-tight text-amber-200">Monopoly</h1>
-          <button onClick={() => router.push("/jeux")} className="rounded-lg border border-slate-600 px-2 py-1 text-xs hover:bg-slate-800">
-            Quitter
-          </button>
-        </div>
-
+      <aside className="flex w-full shrink-0 flex-col gap-3 lg:w-80">
         {game.phase === "auction" && <AuctionPanel s={game} dispatch={dispatch} />}
         {canViewTradePrompt && <TradePrompt s={game} dispatch={dispatch} />}
         {game.phase === "awaitPayment" && <DebtBanner s={game} />}
@@ -202,9 +208,16 @@ export default function MonopolyScreen() {
         </div>
 
         <div className="rounded-2xl border border-slate-700 bg-slate-900/70 p-4">
-          <div className="mb-3 flex gap-2 text-xs">
+          <div className="mb-3 flex gap-2 text-xs" role="group" aria-label="Panneaux d'information">
             {(["joueurs", "propriétés", "journal"] as Tab[]).map((t) => (
-              <button key={t} onClick={() => setTab(t)} aria-pressed={tab === t} className={`rounded-lg px-3 py-1 font-semibold uppercase tracking-wide ${tab === t ? "bg-amber-500/20 text-amber-200" : "text-slate-400 hover:bg-slate-800"}`}>
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                aria-pressed={tab === t}
+                className={`rounded-lg px-3 py-1 font-semibold uppercase tracking-wide transition-colors ${
+                  tab === t ? "bg-amber-500/20 text-amber-200" : "text-slate-400 hover:bg-slate-800"
+                }`}
+              >
                 {t}
               </button>
             ))}
@@ -215,9 +228,20 @@ export default function MonopolyScreen() {
         </div>
       </aside>
 
-      {showTrade && <TradeModal s={game} dispatch={dispatch} onClose={() => setShowTrade(false)} />}
-      {detail !== null && <PropertyPanel s={game} space={detail} dispatch={dispatch} onClose={() => setDetail(null)} />}
-      {game.phase === "over" && <EndScreen s={game} onReplay={() => setGame(createGame({ players: setup }))} />}
-    </main>
+      {showTrade && (
+        <TradeModal s={game} dispatch={dispatch} onClose={() => setShowTrade(false)} />
+      )}
+      {detail !== null && (
+        <PropertyPanel
+          s={game}
+          space={detail}
+          dispatch={dispatch}
+          onClose={() => setDetail(null)}
+        />
+      )}
+      {game.phase === "over" && (
+        <EndScreen s={game} onReplay={() => setGame(createGame({ players: setup }))} />
+      )}
+    </GameShell>
   );
 }

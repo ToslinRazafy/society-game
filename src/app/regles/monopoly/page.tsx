@@ -2,15 +2,15 @@ import Link from "next/link";
 
 export default function ReglesMonopolyPage() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 space-y-6 p-6">
-      <header className="flex items-center justify-between">
-        <h1 className="text-3xl font-extrabold">Règles — Monopoly Premium</h1>
-        <Link href="/jeux/monopoly" className="rounded-xl border border-slate-600 px-4 py-2 hover:bg-slate-800">
+    <main className="mx-auto w-full max-w-2xl flex-1 space-y-8 px-4 py-10 sm:px-6 sm:py-14">
+      <header className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-3xl font-extrabold tracking-tight">Règles — Monopoly Premium</h1>
+        <Link href="/jeux/monopoly" className="rounded-xl border border-slate-600 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800">
           ← Configurer une partie
         </Link>
       </header>
 
-      <section className="space-y-3 leading-relaxed text-slate-200">
+      <section className="space-y-5 leading-relaxed text-slate-200">
         <h2 className="text-xl font-bold text-amber-300">But du jeu</h2>
         <p>
           De <strong>2 à 8 joueurs</strong> sur le même appareil. Chacun démarre avec{' '}
