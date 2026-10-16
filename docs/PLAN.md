@@ -16,6 +16,7 @@
 - [x] Écran de partie jouable (2/3/4 joueurs, local)
 - [x] Écran d'accueil + règles + paramètres
 - [x] Plateforme PlayBoard : landing → catalogue `/jeux` → page jeu (présentation + config) → partie ; architecture multi-jeux (registre + dossier par jeu, ADR-0006)
+- [x] Expérience de jeu : mode immersif plein viewport des écrans de partie + plein écran natif, fondations UI/UX et accessibilité (T-022, mergée develop 2026-10-16)
 - [ ] Playtest & équilibrage (T-010)
 
 ## Phase 2 — Adversaires et plateforme

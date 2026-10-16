@@ -185,6 +185,8 @@ interface Props {
   lastCapture: NodeId | null;
   interactive: boolean;
   onNodeClick: (id: NodeId) => void;
+  /** Hauteur/format du conteneur (le mode immersif passe une variante plein écran). */
+  className?: string;
 }
 
 export default function Board3D({
@@ -195,11 +197,14 @@ export default function Board3D({
   lastCapture,
   interactive,
   onNodeClick,
+  className,
 }: Props) {
   const animated = useMemo(() => animationsEnabled(), []);
   return (
     <div
-      className="w-full h-[62vh] lg:h-[78vh] rounded-2xl overflow-hidden border border-slate-700"
+      className={`w-full overflow-hidden rounded-2xl border border-slate-700 ${
+        className ?? "h-[62vh] lg:h-[78vh]"
+      }`}
       role="application"
       aria-label="Plateau Fanorina 7 en 3D"
     >
