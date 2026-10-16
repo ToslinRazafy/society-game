@@ -69,11 +69,11 @@ export default function LandingPage() {
               <p className="inline-block rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-bold tracking-wide text-amber-300">
                 MULTIJOUEUR LOCAL · SUR UN MÊME APPAREIL
               </p>
-              <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="text-balance text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                 Le salon des jeux de société,{" "}
                 <span className="text-amber-400">sur votre écran.</span>
               </h1>
-              <p className="max-w-lg text-lg leading-relaxed text-slate-300">
+              <p className="max-w-lg text-pretty text-lg leading-relaxed text-slate-300">
                 PlayBoard réunit plusieurs jeux de société jouables immédiatement, à plusieurs,
                 sur le même téléphone ou le même ordinateur. Chacun son tour — et bonne partie.
               </p>

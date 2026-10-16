@@ -1,7 +1,7 @@
 # AI Context — PlayBoard (ex-Society Game)
 
 > Snapshot de l'état réel du projet. Mis à jour à **chaque fin de cycle feature** (voir AGENTS.md).
-> Dernière mise à jour : 2026-10-16 (feature/monopoly-3d)
+> Dernière mise à jour : 2026-10-16 (T-022 : UI/UX + mode plein écran des parties ; release **v0.2.0** taguée, develop en cours)
 
 ## Vision
 
@@ -35,6 +35,7 @@ Parcours : landing → catalogue → présentation/configuration → partie.
 | Navigation plateforme | Landing `/` → catalogue `/jeux` → page jeu (présentation + config) → `/jeux/[slug]/partie` | ADR-0006 |
 | Modèle Monopoly | Moteur pur immuable, machine à phases explicite (`roll → resolveBuy → auction → awaitPayment → manage → over`), dés injectables, transactions atomiques banque↔joueur, pas de sauvegarde en V1 (GameState sérialisable) | ADR-0007 |
 | Rendu 3D Monopoly | Assets 100 % procéduraux (primitives + textures canvas locales, aucune police/dépendance externe), dés animés déterministes (la valeur vient du moteur), extension d'ADR-0005 à Monopoly, CSS grid 2D supprimé | ADR-0008 |
+| Écrans de partie | Mode immersif plein viewport (`GameShell`) : chrome du site masqué, plateau maximal, HUD adaptatif ; **plein écran natif** (Fullscreen API via hook `useFullscreen`, déclenché au lancement de partie, sortie par bouton/Échap) — décision d'UI mineure, sans ADR | T-022, `src/lib/use-fullscreen.ts` |
 | Mode IA / en ligne | Architecturé (moteur pur), non implémenté | — |
 
 ## Architecture actuelle
@@ -69,16 +70,20 @@ src/
       MonopolyScreen.tsx            # écran de partie : Board3D chargé en `dynamic(ssr:false)` + squelette, panneaux DOM (enchère, dette, échange, journal)
       ActionBar.tsx / SidePanels.tsx / TradeModal.tsx / PropertyPanel.tsx
   components/     # PARTAGÉ SITE (pas de logique de jeu)
-    SiteHeader.tsx  # logo PlayBoard + nav + CTA (mobile : menu déroulant)
+    SiteHeader.tsx  # logo PlayBoard + nav (lien actif) + CTA (mobile : menu déroulant)
     SiteFooter.tsx
     GameCard.tsx    # carte catalogue : illustration, badge live/soon, métadonnées
+    GameShell.tsx   # enveloppe des écrans de partie : mode immersif plein viewport + barre d'outils
+    FullscreenButton.tsx # bascule plein écran natif (masqué si l'API est absente)
   lib/
     settings.ts   # préférences localStorage (animations)
+    use-fullscreen.ts # hook Fullscreen API (useSyncExternalStore) + requestFullscreen()
   app/
     page.tsx               # /                    landing (hero, concept, à la une, étapes, avantages)
     jeux/page.tsx          # /jeux                catalogue (filtres catégorie + disponibles)
     jeux/[slug]/page.tsx   # /jeux/…              présentation + config (FanorinaSetup ou MonopolySetup)
-    jeux/[slug]/partie/    # /jeux/…/partie?...   écran de jeu (PLAY_SCREENS, Suspense)
+    jeux/[slug]/partie/    # /jeux/…/partie?...   écran de jeu immersif (PLAY_SCREENS, Suspense)
+    regles/layout.tsx      # /regles/*            chrome du site (header/footer) partagé
     regles/page.tsx        # /regles              règles Fanorina 7
     regles/monopoly/       # /regles/monopoly     règles Monopoly (édition française, mode officiel)
 public/assets/    # logo.png (PlayBoard), références/illustrations des plateaux
@@ -111,4 +116,7 @@ cases des pions, toupie des dés) vivent dans des refs locales de composants (AD
   (playtest T-010) : non vérifiable headless.
 - Pas de tests de composants UI (décision ADR à venir si besoin) ; le moteur Monopoly est couvert
   par ~100 tests + fuzz d'invariants (200 parties).
+- Plein écran natif : dépend de l'API `requestFullscreen` du navigateur (masqué là où elle est
+  absente, ex. Safari iOS sur iPhone) ; le mode immersif plein viewport reste actif dans tous les
+  cas. Sortie par le bouton ou la touche Échap.
 - Validation du ressenti en jeu réel (équilibrage, lisibilité des indices visuels).

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { TOKENS } from "./board-data";
 import { TOKEN_COLORS } from "./board-data";
+import { requestFullscreen } from "@/lib/use-fullscreen";
 
 const DEFAULT_NAMES = ["Joueur 1", "Joueur 2", "Joueur 3", "Joueur 4", "Joueur 5", "Joueur 6", "Joueur 7", "Joueur 8"];
 
@@ -37,6 +38,7 @@ export default function MonopolySetup() {
     const q = new URLSearchParams({ joueurs: String(count) });
     q.set("noms", names.slice(0, count).map((n) => n.trim()).join("|"));
     q.set("pions", tokenChoices.join("|"));
+    requestFullscreen();
     router.push(`/jeux/monopoly/partie?${q.toString()}`);
   };
 
@@ -50,8 +52,8 @@ export default function MonopolySetup() {
               key={n}
               onClick={() => setCount(n)}
               aria-pressed={count === n}
-              className={`min-w-11 flex-1 rounded-xl border px-3 py-2 font-semibold transition-colors ${
-                count === n ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-slate-600 hover:bg-slate-800"
+              className={`min-w-11 flex-1 rounded-xl border px-3 py-2 font-semibold text-slate-200 transition-colors ${
+                count === n ? "border-emerald-400 bg-emerald-500/20 text-emerald-100" : "border-slate-600 hover:border-slate-500 hover:bg-slate-800"
               }`}
             >
               {n}

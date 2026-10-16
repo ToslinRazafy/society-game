@@ -70,8 +70,14 @@ export default function JeuxPage() {
         {/* Catalogue complet */}
         <section className="pb-16">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-4">
-            <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Tous les jeux</h2>
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
+            <div>
+              <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">Tous les jeux</h2>
+              <p className="mt-1 text-sm text-slate-400">
+                {filtered.length} jeu{filtered.length > 1 ? "x" : ""} affiché
+                {filtered.length > 1 ? "s" : ""}
+              </p>
+            </div>
+            <label className="flex cursor-pointer items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800">
               <input
                 type="checkbox"
                 checked={onlyLive}
@@ -82,7 +88,11 @@ export default function JeuxPage() {
             </label>
           </div>
 
-          <div className="mb-8 flex flex-wrap gap-2" role="group" aria-label="Filtrer par catégorie">
+          <div
+            className="mb-8 flex flex-wrap gap-2"
+            role="group"
+            aria-label="Filtrer par catégorie"
+          >
             {chips.map((c) => (
               <button
                 key={c}
@@ -90,8 +100,8 @@ export default function JeuxPage() {
                 aria-pressed={category === c}
                 className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
                   category === c
-                    ? "bg-amber-500 text-slate-950"
-                    : "border border-slate-600 text-slate-300 hover:bg-slate-800"
+                    ? "bg-amber-500 text-slate-950 shadow-lg shadow-amber-900/30"
+                    : "border border-slate-600 text-slate-300 hover:border-slate-500 hover:bg-slate-800 hover:text-white"
                 }`}
               >
                 {c}

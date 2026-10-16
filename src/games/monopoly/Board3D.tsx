@@ -92,9 +92,11 @@ function Stock({ label, count, x, z }: { label: string; count: number; x: number
 interface Props {
   s: GameState;
   onCellClick: (i: number) => void;
+  /** Format du conteneur (le mode immersif passe une variante plein écran). */
+  className?: string;
 }
 
-export default function Board3D({ s, onCellClick }: Props) {
+export default function Board3D({ s, onCellClick, className }: Props) {
   const animated = useMemo(() => animationsEnabled(), []);
   const dstr = s.dice ? `${s.dice[0]}-${s.dice[1]}-${s.turn}-${s.current}` : "";
   const [rollKey, setRollKey] = useState(0);
@@ -108,7 +110,9 @@ export default function Board3D({ s, onCellClick }: Props) {
 
   return (
     <div
-      className="w-full max-w-[min(96vw,78vh)] aspect-square rounded-2xl overflow-hidden border border-slate-700"
+      className={`overflow-hidden rounded-2xl border border-slate-700 ${
+        className ?? "w-full max-w-[min(96vw,78vh)] aspect-square"
+      }`}
       role="application"
       aria-label="Plateau Monopoly en 3D"
     >

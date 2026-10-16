@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { PLAYER_COLORS, PLAYER_LABELS } from "@/games/fanorina-7/engine";
 import { animationsEnabled, setAnimationsEnabled } from "@/lib/settings";
+import { requestFullscreen } from "@/lib/use-fullscreen";
 
 type FirstChoice = "random" | "0" | "1" | "2" | "3";
 
@@ -30,14 +31,15 @@ export default function FanorinaSetup() {
     if (players === 2) q.set("axe", axis);
     const trimmed = names.slice(0, players).map((n) => n.trim());
     if (trimmed.some(Boolean)) q.set("noms", trimmed.join("|"));
+    requestFullscreen();
     router.push(`/jeux/fanorina-7/partie?${q.toString()}`);
   };
 
   const optionBtn = (activeState: boolean) =>
-    `px-4 py-2 rounded-xl border font-medium transition-colors ${
+    `px-4 py-2 rounded-xl border font-medium text-slate-200 transition-colors ${
       activeState
-        ? "border-amber-400 bg-amber-500/15 text-amber-200"
-        : "border-slate-600 hover:bg-slate-800"
+        ? "border-amber-400 bg-amber-500/15 text-amber-100"
+        : "border-slate-600 hover:border-slate-500 hover:bg-slate-800"
     }`;
 
   return (
