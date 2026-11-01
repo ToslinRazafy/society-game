@@ -3,6 +3,7 @@
 import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { PLAYER_COLORS, PLAYER_LABELS } from "@/games/fanorina-7/engine";
+import { BOT_LEVELS, type BotLevel } from "@/games/fanorina-7/bot";
 import { animationsEnabled, setAnimationsEnabled } from "@/lib/settings";
 import { requestFullscreen } from "@/lib/use-fullscreen";
 
@@ -17,6 +18,8 @@ export default function FanorinaSetup() {
   const [names, setNames] = useState<string[]>(["", "", "", ""]);
   const [axis, setAxis] = useState<"v" | "h">("v");
   const [first, setFirst] = useState<FirstChoice>("random");
+  const [vsBot, setVsBot] = useState(false);
+  const [botDiff, setBotDiff] = useState<BotLevel>("moyen");
   const anim = useSyncExternalStore(noopSubscribe, animationsEnabled, serverAnimationsOn);
 
   const setName = (i: number, value: string) =>
@@ -29,6 +32,11 @@ export default function FanorinaSetup() {
         : Math.min(Number(first), players - 1);
     const q = new URLSearchParams({ joueurs: String(players), premier: String(firstIdx) });
     if (players === 2) q.set("axe", axis);
+    if (players === 2 && vsBot) {
+      q.set("mode", "bot");
+      q.set("diff", botDiff);
+      q.set("bot", "1");
+    }
     const trimmed = names.slice(0, players).map((n) => n.trim());
     if (trimmed.some(Boolean)) q.set("noms", trimmed.join("|"));
     requestFullscreen();
@@ -50,7 +58,10 @@ export default function FanorinaSetup() {
           {([2, 3, 4] as const).map((n) => (
             <button
               key={n}
-              onClick={() => setPlayers(n)}
+              onClick={() => {
+                setPlayers(n);
+                if (n > 2) setVsBot(false); // le bot n'existe qu'en duel
+              }}
               aria-pressed={players === n}
               className={`${optionBtn(players === n)} flex-1`}
             >
@@ -72,15 +83,21 @@ export default function FanorinaSetup() {
                 style={{ background: PLAYER_COLORS[i] }}
                 aria-hidden="true"
               />
-              <input
-                type="text"
-                value={names[i]}
-                maxLength={16}
-                onChange={(e) => setName(i, e.target.value)}
-                placeholder={PLAYER_LABELS[i]}
-                aria-label={`Nom du ${PLAYER_LABELS[i].toLowerCase()}`}
-                className="w-full rounded-xl border border-slate-600 bg-slate-950/60 px-3 py-2 text-sm placeholder:text-slate-500 focus:border-amber-400 focus:outline-none"
-              />
+              {players === 2 && vsBot && i === 1 ? (
+                <span className="w-full rounded-xl border border-slate-600 bg-slate-800/60 px-3 py-2 text-sm text-slate-300">
+                  Bot — {botDiff}
+                </span>
+              ) : (
+                <input
+                  type="text"
+                  value={names[i]}
+                  maxLength={16}
+                  onChange={(e) => setName(i, e.target.value)}
+                  placeholder={PLAYER_LABELS[i]}
+                  aria-label={`Nom du ${PLAYER_LABELS[i].toLowerCase()}`}
+                  className="w-full rounded-xl border border-slate-600 bg-slate-950/60 px-3 py-2 text-sm placeholder:text-slate-500 focus:border-amber-400 focus:outline-none"
+                />
+              )}
             </label>
           ))}
         </div>
@@ -97,6 +114,37 @@ export default function FanorinaSetup() {
               Gauche ↔ Droite
             </button>
           </div>
+        </div>
+      )}
+
+      {players === 2 && (
+        <div className="space-y-2">
+          <p className="text-sm uppercase tracking-widest text-slate-400">Adversaire du joueur 1</p>
+          <div className="flex gap-3">
+            <button onClick={() => setVsBot(false)} aria-pressed={!vsBot} className={`${optionBtn(!vsBot)} flex-1`}>
+              Humain
+            </button>
+            <button onClick={() => setVsBot(true)} aria-pressed={vsBot} className={`${optionBtn(vsBot)} flex-1`}>
+              Bot
+            </button>
+          </div>
+          {vsBot && (
+            <div className="space-y-2 pt-1">
+              <p className="text-sm uppercase tracking-widest text-slate-400">Difficulté du bot</p>
+              <div className="flex gap-3">
+                {BOT_LEVELS.map((lvl) => (
+                  <button
+                    key={lvl}
+                    onClick={() => setBotDiff(lvl)}
+                    aria-pressed={botDiff === lvl}
+                    className={`${optionBtn(botDiff === lvl)} flex-1 capitalize`}
+                  >
+                    {lvl}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
