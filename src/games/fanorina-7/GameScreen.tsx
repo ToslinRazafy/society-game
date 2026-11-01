@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -18,6 +18,7 @@ import {
   createGame,
   legalMoves,
 } from "@/games/fanorina-7/engine";
+import { BotLevel, botLevelFromParam, chooseMove } from "@/games/fanorina-7/bot";
 
 const Board3D = dynamic(() => import("./Board3D"), {
   ssr: false,
@@ -41,14 +42,37 @@ function parseNames(params: URLSearchParams): string[] {
   return params.get("noms")?.split("|") ?? [];
 }
 
+interface BotSetup {
+  enabled: boolean;
+  level: BotLevel;
+  botIndex: number;
+}
+
+// Le mode bot n'existe que dans l'URL ; le moteur ne le connaît pas.
+// `mode=bot` est ignoré si ce n'est pas un duel (playerCount === 2).
+function parseBot(params: URLSearchParams, config: GameConfig): BotSetup {
+  return {
+    enabled: params.get("mode") === "bot" && config.playerCount === 2,
+    level: botLevelFromParam(params.get("diff")),
+    botIndex: params.get("bot") === "0" ? 0 : 1,
+  };
+}
+
 export default function GameScreen() {
   const params = useSearchParams();
   const router = useRouter();
   const config = useMemo(() => parseConfig(new URLSearchParams(params.toString())), [params]);
   const names = useMemo(() => parseNames(params), [params]);
+  const bot = useMemo(
+    () => parseBot(new URLSearchParams(params.toString()), config),
+    [params, config],
+  );
   const label = useCallback(
-    (playerIndex: number) => names[playerIndex]?.trim() || PLAYER_LABELS[playerIndex],
-    [names],
+    (playerIndex: number) => {
+      if (bot.enabled && playerIndex === bot.botIndex) return `Bot (${bot.level})`;
+      return names[playerIndex]?.trim() || PLAYER_LABELS[playerIndex];
+    },
+    [bot, names],
   );
 
   const [game, setGame] = useState<GameState>(() => createGame(config));
@@ -57,6 +81,7 @@ export default function GameScreen() {
   const [toast, setToast] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"restart" | "quit" | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const botTurn = bot.enabled && game.phase !== "over" && game.current === bot.botIndex;
 
   const showToast = useCallback((msg: string) => {
     setToast(msg);
@@ -74,6 +99,7 @@ export default function GameScreen() {
   const handleNode = useCallback(
     (id: NodeId) => {
       if (game.phase === "over") return;
+      if (botTurn) return;
       // coup sur une destination légale de la pierre sélectionnée
       if (selected !== null) {
         const move = moves.find((m) => m.to === id);
@@ -118,14 +144,39 @@ export default function GameScreen() {
       setSelected(null);
       setMoves([]);
     },
-    [game, selected, moves, showToast],
+    [game, selected, moves, showToast, botTurn],
   );
+
+  // Boucle du bot : à chaque état où c'est son tour, un coup est choisi après
+  // un court délai. L'effet se relance sur chaque nouvelle partie (chaîne de
+  // sauts incluse) ; le cleanup avale les timer doublons (StrictMode).
+  useEffect(() => {
+    if (!botTurn) return;
+    const snapshot = game;
+    const timer = setTimeout(
+      () => {
+        const move = chooseMove(snapshot, bot.level);
+        if (!move) return;
+        const result = applyMove(snapshot, move);
+        if (!result.ok) {
+          showToast("Le bot n'a trouvé aucun coup valide.");
+          return;
+        }
+        if (move.type === "capture") showToast("Le bot élimine une pierre !");
+        setGame(result.state);
+      },
+      snapshot.phase === "bonus" ? 350 : 500,
+    );
+    return () => clearTimeout(timer);
+  }, [game, bot, botTurn, showToast]);
 
   const winner = game.winner !== null ? game.players[game.winner] : null;
   const status =
     game.phase === "over"
       ? "Partie terminée."
-      : game.phase === "bonus"
+      : botTurn
+        ? `${label(bot.botIndex)} réfléchit…`
+        : game.phase === "bonus"
         ? `${label(game.current)} : la pierre qui a sauté rejoue — elle peut enchaîner les captures.`
         : `Au tour de ${label(game.current)} de jouer.`;
 
@@ -151,7 +202,7 @@ export default function GameScreen() {
           selected={selected}
           moves={moves}
           lastCapture={game.lastCapture}
-          interactive={game.phase !== "over"}
+          interactive={game.phase !== "over" && !botTurn}
           onNodeClick={handleNode}
           className="h-[52dvh] sm:h-[58dvh] lg:h-full"
         />
@@ -192,7 +243,7 @@ export default function GameScreen() {
                   <span className="truncate font-medium">{label(p.index)}</span>
                   {isTurn && (
                     <span className="text-xs font-semibold uppercase tracking-wide text-sky-300">
-                      à toi de jouer
+                      {bot.enabled && p.index === bot.botIndex ? "réfléchit…" : "à toi de jouer"}
                     </span>
                   )}
                 </span>
@@ -258,7 +309,9 @@ export default function GameScreen() {
             <p className="text-sm font-bold uppercase tracking-widest text-amber-300">
               Partie terminée
             </p>
-            <h2 className="text-3xl font-extrabold">Victoire !</h2>
+            <h2 className="text-3xl font-extrabold">
+              {bot.enabled && winner.index === bot.botIndex ? "Défaite…" : "Victoire !"}
+            </h2>
             <div className="flex items-center justify-center gap-3 text-xl">
               <span
                 className="inline-block h-8 w-8 rounded-full ring-1 ring-white/20"

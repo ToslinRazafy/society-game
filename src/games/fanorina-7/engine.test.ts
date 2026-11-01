@@ -7,43 +7,11 @@ import {
   allLegalMovesFor,
   GameState,
   zonesForConfig,
-  PlayerState,
 } from "./engine";
-import { NodeId, nodeId } from "./board";
+import { nodeId } from "./board";
+import { makeState } from "./test-helpers";
 
 const N = nodeId;
-
-const ZONES_CYCLE = ["top", "right", "bottom", "left"] as const;
-
-function makeState(opts: {
-  stones: Array<[x: number, y: number, player: number]>;
-  players?: PlayerState[];
-  current?: number;
-  phase?: GameState["phase"];
-  bonusStone?: NodeId | null;
-}): GameState {
-  const stones: GameState["stones"] = {};
-  let id = 0;
-  for (const [x, y, player] of opts.stones) stones[N(x, y)] = { id: id++, player };
-  const playerCount = Math.max(...opts.stones.map(([, , p]) => p)) + 1;
-  return {
-    stones,
-    nextStoneId: id,
-    players:
-      opts.players ??
-      Array.from({ length: playerCount }, (_, i) => ({
-        index: i,
-        zone: ZONES_CYCLE[i],
-        eliminated: false,
-      })),
-    current: opts.current ?? 0,
-    phase: opts.phase ?? "select",
-    bonusStone: opts.bonusStone ?? null,
-    lastCapture: null,
-    winner: null,
-    history: [],
-  };
-}
 
 describe("configuration de partie", () => {
   it("4 joueurs : 28 pierres, 4 positions libres (coins du carré central)", () => {

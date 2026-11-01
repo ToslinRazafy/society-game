@@ -5,7 +5,7 @@
 
 ## 🔄 En cours
 
-- Aucun
+_(aucune)_
 
 ## 📋 À faire
 
@@ -15,7 +15,6 @@
 
 - [ ] **T-002** ADR : stratégie backend / persistance des parties (reprendre, match à distance, replay ?)
 - [ ] **T-003** ADR : authentification des joueurs
-- [ ] **T-008** Adversaire IA — niveaux facile/moyen/difficile ; le moteur pur (`legalMoves`) est prêt, concevoir la fonction d'évaluation (ADR dédié)
 - [ ] **T-009** Mode en ligne (parties privées avec code d'invitation, matchmaking, synchronisation) — spec §11.3 reçue partiellement, à compléter
 - [ ] **T-010** Playtest de la V1 : équilibrage, lisibilité des indices visuels, ressenti des animations
 - [ ] **T-011** Sons / retours audio optionnels (à cadrer par une mini-spec)
@@ -42,3 +41,4 @@
 | 2026-10-16 | T-023 | **Release v0.3.0** : merge develop→main (`--no-ff`, commit `release:`), tag `v0.3.0` pushé ; contient UI/UX + mode plein écran des parties (T-022) ; version `package.json` 0.3.0 ; develop, main et tag poussés sur origin | — | tag v0.3.0 |
 | 2026-10-16 | T-024 | **Cadre de jeu plein écran maximal + responsive + warnings three.js** : cadrage caméra analytique partagé (`src/games/fit-camera.tsx`) — le plateau remplit au maximum le conteneur sans rognage, quel que soit le format (portrait/paysage/plein écran) et la rotation ; marges/en-tête/HUD compactés (`dvh`), colonnes latérales défilables (plus de contenu coupé en `overflow-hidden`) ; warning `PCFSoftShadowMap has been removed` corrigé (`<Canvas shadows="percentage">`, rendu identique) ; cache Vitest déplacé hors du dépôt (`vitest.config.mts`) pour supprimer l'attente Turbopack ; moteurs inchangés (135 tests), lint/build OK | feature/board-fullscreen-responsive | `src/games/fit-camera.tsx`, `vitest.config.mts` |
 | 2026-10-16 | T-026 | **Release v0.3.1** : merge develop→main (`--no-ff`, commit `release:`), tag `v0.3.1` pushé ; contient le correctif d'affichage/posture (T-024) ; version `package.json` 0.3.1 ; develop, main et tag poussés sur origin | — | tag v0.3.1 |
+| 2026-11-01 | T-008 | **Adversaire bot Fanorina 7** : `bot.ts` client externe pur du moteur (moteur/board/GameState inchangés) — facile = aléatoire pondéré (captures ×3), moyen = minimax profondeur 3, difficile = minimax alpha-bêta à valeurs absolues + itération en profondeur ≤6, budget d'unités de travail + deadline douce, coup partiel déjà prouvé renvoyé sur timeout ; évaluation matériau + captures menaçantes + mobilité + avance vers le foyer adverse (tables BFS) ; anti-garage par répétition dans la ligne (valeur 0, interne au bot) ; **duel 2 joueurs uniquement** (`?mode=bot&diff=…`), UI : toggle Adversaire + difficulté dans le setup, tour du bot cadencé (500 ms / 350 ms en bonus), chaînes de sauts enchaînées automatiquement, entrées humaines verrouillées, HUD/statut/écran de défaite ; `src/lib/rng.ts` extrait (monopoly/rng.ts = shim) ; 46 tests Fanorina dont fuzz d'invariants + fumée de force (difficile bat facile 6/6), lint/build OK | feature/bot-fanorina | ADR-0009, `src/games/fanorina-7/bot.ts` |

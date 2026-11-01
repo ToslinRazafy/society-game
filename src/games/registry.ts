@@ -22,9 +22,9 @@ export const GAMES: readonly GameMeta[] = [
   {
     slug: "fanorina-7",
     name: "Fanorina 7",
-    tagline: "7 pierres par joueur. Dernier en jeu gagné.",
+    tagline: "7 pierres par joueur. Dernier en jeu gagné. Contre un bot possible.",
     description:
-      "Jeu de stratégie inspiré des plateaux à déplacements de pierres : glissez, sautez par-dessus un adversaire pour l'éliminer, et enchaînez les captures avec la même pierre. 2 à 4 joueurs sur le même appareil.",
+      "Jeu de stratégie inspiré des plateaux à déplacements de pierres : glissez, sautez par-dessus un adversaire pour l'éliminer, et enchaînez les captures avec la même pierre. 2 à 4 joueurs sur le même appareil, ou duel contre un bot (3 niveaux).",
     illustration: "/assets/fanorina-7-plateau-reference.png",
     players: { min: 2, max: 4 },
     duration: "10–20 min",
