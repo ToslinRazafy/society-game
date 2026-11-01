@@ -57,6 +57,23 @@ export default function ReglesPage() {
           éliminé et son tour est sauté. Dès qu&apos;un seul joueur a encore des pierres, la partie
           est gagnée.
         </p>
+
+        <h2 className="text-xl font-bold text-sky-300">Mode contre le bot</h2>
+        <p>
+          En duel (2 joueurs exactement), la configuration de partie permet de confier la place
+          du joueur 2 à un <strong>bot</strong>, qui joue selon les mêmes règles que vous : il ne
+          peut jouer que des coups légaux et enchaîne lui-même ses chaînes de sauts. Trois niveaux
+          de difficulté :
+        </p>
+        <ul className="list-disc pl-6 space-y-1">
+          <li><strong>Facile</strong> : coups presque aléatoires, avec une préférence marquée pour les captures. Idéal pour découvrir le jeu.</li>
+          <li><strong>Moyen</strong> : analyse quelques coups à l&apos;avance ; il voit les captures immédiates et les pièges évidents.</li>
+          <li><strong>Difficile</strong> : exploration plus profonde avec élagage, budget de calcul et préférence pour les positions supérieures. Pour jouer sérieusement.</li>
+        </ul>
+        <p>
+          Le niveau se choisit à la configuration ; le bot annonce « réfléchit… » pendant son tour
+          et les clics humains sont neutralisés tant qu&apos;il joue.
+        </p>
       </section>
     </main>
   );
