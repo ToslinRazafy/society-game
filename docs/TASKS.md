@@ -5,7 +5,10 @@
 
 ## 🔄 En cours
 
-_(aucune)_
+- [ ] **T-028** CI GitHub Actions — workflow `.github/workflows/ci.yml` : lint + tests + build sur chaque push/PR vers develop/main.
+  - **Analyse** : le dépôt n'a aucun pipeline CI ; seuls des checks externes tournent (Vercel = build/déploiement, GitGuardian = secrets). `npm run lint` et les 151 tests Vitest ne sont validés qu'en local. Le workflow : `actions/checkout@v4` + `actions/setup-node@v4` (Node 22 LTS, cache npm) + `npm ci` → `lint` → `test` → `build`. Déclencheurs push (develop, main) et pull_request (vers develop, main) pour que toute PR soit verte avant merge.
+  - **Impact** : seul fichier ajouté `.github/workflows/ci.yml` ; aucune dépendance ni code applicatif touché ; ADR-0010 (décision infra).
+  - **Vérification** : le workflow s'exécute lui-même sur la PR de la feature (validation réelle, pas `act`).
 
 ## 📋 À faire
 
