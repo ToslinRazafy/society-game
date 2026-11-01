@@ -19,6 +19,7 @@ Parcours : landing → catalogue → présentation/configuration → partie.
 - **Langage** : TypeScript strict, React 19 (React Compiler)
 - **Style** : Tailwind CSS 4 ; thème sombre (#0f172a)
 - **Lint** : ESLint 9 ; **Tests** : Vitest 5 (`npm test`), cache hors dépôt (`vitest.config.mts`)
+- **CI** : GitHub Actions (`.github/workflows/ci.yml`) — lint + tests + build sur push/PR vers develop/main (ADR-0010) ; checks externes Vercel (build/déploiement) et GitGuardian (secrets) en plus
 - **Commandes** : `npm run dev` / `lint` / `test` / `build`
 - **Version** : 0.4.0 (release en vigueur : `v0.4.0`)
 
