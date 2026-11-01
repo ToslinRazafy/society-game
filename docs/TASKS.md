@@ -5,7 +5,11 @@
 
 ## 🔄 En cours
 
-- Aucun
+- [ ] **T-008** Adversaire IA — niveaux facile/moyen/difficile ; le moteur pur (`legalMoves`) est prêt, concevoir la fonction d'évaluation (ADR dédié)
+  - **Périmètre validé** : duel 2 joueurs uniquement (humain vs bot, place du bot = joueur 2) ; 3 niveaux facile/moyen/difficile ; les parties 3–4 joueurs restent 100 % humaines.
+  - **Analyse** : le bot est un **client externe pur du moteur** (`allLegalMovesFor` gère déjà la phase bonus ; `applyMove` valide chaque coup) — `GameState`/`GameConfig` inchangés, le mode vit uniquement dans l'URL (`?mode=bot&diff=…`) et l'UI. Algorithme : aléatoire pondéré (facile) / negamax profondeur 2 (moyen) / negamax + alpha-bêta itératif profondeur ≤6 avec budget nœuds (difficile) ; évaluation = matériau + captures menaçantes + mobilité + avance vers le foyer adverse (table BFS statique). Anti-garage : répétition dans la ligne de recherche = valeur de nulle (le moteur n'a pas de règle de nulle, non modifié).
+  - **Impact** : nouveaux `src/games/fanorina-7/bot.ts` + `bot.test.ts` + `test-helpers.ts`, `src/lib/rng.ts` (extraction mulberry32 depuis `monopoly/rng.ts` qui devient un shim de ré-export) ; modifs `GameScreen.tsx` (boucle du bot, verrouillage des entrées humaines) et `FanorinaSetup.tsx` (sélecteur vs Bot/difficulté) ; ADR-0009.
+  - **Question tranchée par ADR** : profondeur/max et pondérations d'évaluation → ADR-0009, rééquilibrage possible au playtest T-010.
 
 ## 📋 À faire
 
@@ -15,7 +19,6 @@
 
 - [ ] **T-002** ADR : stratégie backend / persistance des parties (reprendre, match à distance, replay ?)
 - [ ] **T-003** ADR : authentification des joueurs
-- [ ] **T-008** Adversaire IA — niveaux facile/moyen/difficile ; le moteur pur (`legalMoves`) est prêt, concevoir la fonction d'évaluation (ADR dédié)
 - [ ] **T-009** Mode en ligne (parties privées avec code d'invitation, matchmaking, synchronisation) — spec §11.3 reçue partiellement, à compléter
 - [ ] **T-010** Playtest de la V1 : équilibrage, lisibilité des indices visuels, ressenti des animations
 - [ ] **T-011** Sons / retours audio optionnels (à cadrer par une mini-spec)
